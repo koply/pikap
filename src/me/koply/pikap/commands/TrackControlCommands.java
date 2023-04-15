@@ -71,8 +71,9 @@ public class TrackControlCommands implements CLICommand {
 
     @Command(usages = {"volume", "vol", "volum", "sound"}, desc = "Sets the volume of the song.")
     public void volume(CommandEvent e) {
-        if (e.getArgs().length < 1) {
+        if (e.getArgs().length < 2) {
            println("Current volume: " + soundManager.getVolume());
+           return;
         }
         Integer volume = Util.parseInt(e.getArgs()[1]);
         if (volume == null) {
