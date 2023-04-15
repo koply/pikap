@@ -1,0 +1,8 @@
+# Project exclude paths
+/target/
+/.idea
+dependency-reduced-pom.xml
+*.yml
+*.db
+*.log
+*.iml
