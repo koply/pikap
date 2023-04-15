@@ -21,7 +21,7 @@ CLI Youtube player without ads. Only audio stream from YouTube by [Lavaplayer](h
 
 </details>
 
-### How To Build And Run
+<h2 align="center">⚙️ How To Build And Run</h3>
 
 I will also share the compiled files when <b>pikap</b> goes into beta version.
 
@@ -33,7 +33,8 @@ mvn install
 sh run.sh
 ```
 
-### Task List
+<h2 align="center">🗒️ Task List</h3>
+
 - [ ] Download option.
 - [ ] Equalizer for player
 - [ ] Local web page for remote control the player
