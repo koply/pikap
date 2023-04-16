@@ -88,7 +88,7 @@ public final class Util {
         Console.println(text + " (Number)");
         while (true) {
             Console.print("> ");
-            String entry = Console.SC.nextLine();
+            String entry = Console.LINE_READER.readLine();
             Integer value = parseInt(entry);
             if (value != null) return value;
         }
@@ -98,7 +98,7 @@ public final class Util {
         Console.println(text + " (Only numbers with minimum: " + min + ", maximum: " + max + " )");
         while (true) {
             Console.print("> ");
-            String entry = Console.SC.nextLine();
+            String entry = Console.LINE_READER.readLine();
             Integer value = parseInt(entry);
             if (value != null && value >= min && value <= max) return value;
         }
