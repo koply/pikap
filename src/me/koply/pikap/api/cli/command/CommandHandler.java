@@ -3,6 +3,7 @@ package me.koply.pikap.api.cli.command;
 import com.github.tomaslanger.chalk.Chalk;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.sound.SoundManager;
+import org.jline.reader.UserInterruptException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.Map;
 public class CommandHandler {
 
     public static final Map<String, CommandClassData> COMMAND_CLASSES = new HashMap<>();
+    private static final String CONSOLE_PREFIX = "> ";
+
     private final CommandInitializer initializer = new CommandInitializer(COMMAND_CLASSES);
 
     public CommandHandler(String...packages) {
@@ -28,8 +31,7 @@ public class CommandHandler {
      */
     public void startNewHandler() {
         while (isRunning) {
-            System.out.print(Chalk.on("> ").yellow());
-            String entry = Console.SC.nextLine().trim();
+            String entry = this.readUserInput();
             String[] args = entry.split(" ");
 
             if (entry.equalsIgnoreCase("exit") || entry.equalsIgnoreCase("quit")) {
@@ -57,5 +59,13 @@ public class CommandHandler {
         }
     }
 
-
+    private String readUserInput() {
+        try {
+            String prefix = Chalk.on(CONSOLE_PREFIX).yellow().toString();
+            return Console.LINE_READER.readLine(prefix).trim();
+        } catch (UserInterruptException e) {
+            isRunning = false;
+            return "exit";
+        }
+    }
 }
