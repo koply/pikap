@@ -1,6 +1,8 @@
 <h1 align="center">💿 pikap</h1>
 
-CLI Youtube player without ads. Only audio stream from YouTube by [Lavaplayer](https://github.com/sedmelluq/lavaplayer).
+CLI YouTube player without ads. Only audio stream from YouTube by [Lavaplayer](https://github.com/sedmelluq/lavaplayer).
+<br/>
+🕰️ <b>Planned</b> update for support the SoundCloud, Twitch and local audio files. 
 
 ### Features
 1. Minimal system usage (~100MB Memory)
@@ -15,9 +17,9 @@ CLI Youtube player without ads. Only audio stream from YouTube by [Lavaplayer](h
 
 <summary>Click here for screenshots</summary>
 
-<img src="images/1.png" height="100%" />
+<img src="images/1.png" />
 </br>
-<img src="images/2.png" height="90%" />
+<img src="images/2.png" />
 
 </details>
 
@@ -37,6 +39,7 @@ sh run.sh
 
 - [ ] Download option.
 - [ ] Equalizer for player
+- [ ] Support for SoundCloud, Twitch and local audio files.
 - [ ] Local web page for remote control the player
 - [ ] Database initialization and integration
 - [ ] Storing information of past songs with SQLite
