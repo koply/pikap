@@ -6,7 +6,13 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
+import me.koply.pikap.api.event.PauseEvent;
+import me.koply.pikap.api.event.ResumeEvent;
+import me.koply.pikap.api.event.TrackEndEvent;
+import me.koply.pikap.event.EventManager;
 import me.koply.pikap.model.PlayQueryData;
 
 import java.util.concurrent.TimeUnit;
@@ -23,6 +29,9 @@ public class SoundManager {
     private static final SearchResultHandler handler = new SearchResultHandler(scheduler);
 
     public SoundManager() {
+    }
+
+    public void initialize() {
         // we don't need a bunch of these sources
         // AudioSourceManagers.registerRemoteSources(playerManager);
         // just YouTube for now
@@ -57,8 +66,8 @@ public class SoundManager {
         return player.getPlayingTrack();
     }
 
-    public void nextTrack(int number) {
-        scheduler.nextTrack(number);
+    public void nextTrack(int count) {
+        scheduler.nextTrack(count);
     }
 
     public void setVolume(int x) {
@@ -89,30 +98,33 @@ public class SoundManager {
         }
     }
 
-    private boolean paused = false;
-    public boolean isPaused() { return paused; }
-
-    public void playPauseButton() {
-        if (paused) resume();
-        else pause();
+    public boolean isPaused() {
+        return player.isPaused();
     }
 
     public void pause() {
         player.setPaused(true);
         PIPELINE.pauseOutputLine();
-        paused = true;
+        EventManager.pushEvent(
+                new PauseEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+
         Console.info("Paused.");
     }
 
     public void resume() {
         player.setPaused(false);
         PIPELINE.resumeOutputLine();
-        paused = false;
+        EventManager.pushEvent(
+                new ResumeEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+
         Console.info("Resumed.");
     }
 
     public void stop() {
         player.stopTrack();
+        EventManager.pushEvent(
+                new TrackEndEvent(Main.SOUND_MANAGER, player.getPlayingTrack(), AudioTrackEndReason.STOPPED));
+
         Console.info("Track stopped.");
     }
 

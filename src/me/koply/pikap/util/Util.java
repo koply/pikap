@@ -6,6 +6,7 @@ import me.koply.pikap.sound.SoundManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -60,7 +61,6 @@ public final class Util {
         millis -= minutes * MINUTE;
 
         long seconds = millis / SECOND;
-        millis -= seconds * SECOND;
 
         StringBuilder builder = new StringBuilder();
 
@@ -76,11 +76,6 @@ public final class Util {
         if (seconds > 0) {
             builder.append(" ").append(seconds).append(seconds == 1 ? " second" : " seconds");
         }
-/* is it really necessary?
-        if (millis > 0) {
-            builder.append(" ").append(millis).append(" mili saniye");
-        }
- */
         return builder.toString();
     }
 
@@ -95,12 +90,17 @@ public final class Util {
     }
 
     public static int readInteger(String text, int min, int max) {
-        Console.println(text + " (Only numbers with minimum: " + min + ", maximum: " + max + " )");
+        Console.println(text + " (Only numbers with minimum: " + min + ", maximum: " + max + ", 0 for cancel)");
         while (true) {
             Console.print("> ");
             String entry = Console.SC.nextLine();
             Integer value = parseInt(entry);
-            if (value != null && value >= min && value <= max) return value;
+            if (value == null) {
+                Console.println(text + " (Only numbers with minimum: " + min + ", maximum: " + max + ", 0 for cancel)");
+                continue;
+            }
+            if (value == 0) return 0;
+            if (value >= min && value <= max) return value;
         }
     }
 
@@ -110,6 +110,12 @@ public final class Util {
         int volume = soundManager.getVolume();
 
         return TrackBoxBuilder.buildTrackBox(75, nowPlayin, isPause, volume);
+    }
+
+    public static String getLogName() {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        return "pikap_" + formatter.format(date) + ".log";
     }
 
 }

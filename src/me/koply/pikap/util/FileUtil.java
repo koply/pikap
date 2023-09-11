@@ -41,4 +41,21 @@ public class FileUtil {
         return file != null && file.exists() && file.isFile() && file.canRead();
     }
 
+    public static void createDirectory(File file) {
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+    }
+
+    public static void createNewFile(File file) {
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

@@ -10,7 +10,7 @@ import me.koply.pikap.api.cli.command.OnlyInstance;
 import me.koply.pikap.model.PlayQueryData;
 import me.koply.pikap.util.Util;
 
-import static me.koply.pikap.Main.soundManager;
+import static me.koply.pikap.Main.SOUND_MANAGER;
 
 @OnlyInstance
 public class TrackControlCommands implements CLICommand {
@@ -32,7 +32,7 @@ public class TrackControlCommands implements CLICommand {
             return;
         }
         boolean isUrl = Util.isUrl(order);
-        soundManager.playTrack(new PlayQueryData(order, isUrl, playlist, now));
+        SOUND_MANAGER.playTrack(new PlayQueryData(order, isUrl, playlist, now));
 
         try {
             synchronized (instance) {
@@ -45,17 +45,17 @@ public class TrackControlCommands implements CLICommand {
 
     @Command(usages = "pause", desc = "Pause's the song.")
     public void pause(CommandEvent e) {
-        soundManager.pause();
+        SOUND_MANAGER.pause();
     }
 
     @Command(usages = "resume", desc = "Resume's the song.")
     public void resume(CommandEvent e) {
-        soundManager.resume();
+        SOUND_MANAGER.resume();
     }
 
     @Command(usages = "stop", desc = "Stop's the song.")
     public void stop(CommandEvent e) {
-        soundManager.stop();
+        SOUND_MANAGER.stop();
     }
 
     @Command(usages = {"next", "skip", "n"}, desc = "Switches to next track. You can enter number.")
@@ -66,36 +66,36 @@ public class TrackControlCommands implements CLICommand {
             Integer temp;
             number = (temp = Util.parseInt(arg)) == null ? 1 : temp;
         }
-        soundManager.nextTrack(number);
+        SOUND_MANAGER.nextTrack(number);
     }
 
     @Command(usages = {"volume", "vol", "volum", "sound"}, desc = "Sets the volume of the song.")
     public void volume(CommandEvent e) {
         if (e.getArgs().length < 1) {
-           println("Current volume: " + soundManager.getVolume());
+           println("Current volume: " + SOUND_MANAGER.getVolume());
         }
         Integer volume = Util.parseInt(e.getArgs()[1]);
         if (volume == null) {
-            println("Invalid entry. Current volume: " + soundManager.getVolume());
+            println("Invalid entry. Current volume: " + SOUND_MANAGER.getVolume());
         } else {
             volume = volume > 100 ? 100 : volume < 0 ? 0 : volume;
-            soundManager.setVolume(volume);
+            SOUND_MANAGER.setVolume(volume);
             println("New volume: " + volume);
         }
     }
 
     @Command(usages = "now", desc = "Shows info of the playing track.")
     public void nowPlaying(CommandEvent e) {
-        if (soundManager.getPlayingTrack() == null) {
+        if (SOUND_MANAGER.getPlayingTrack() == null) {
             println("Silence...");
         } else {
-            Console.prln(Util.getNowPlayingBox(soundManager));
+            Console.prln(Util.getNowPlayingBox(SOUND_MANAGER));
         }
     }
 
     @Command(usages = "seek", desc = "Seeks the playing track with given seconds.")
     public void seek(CommandEvent e) {
-        AudioTrack track = soundManager.getPlayingTrack();
+        AudioTrack track = SOUND_MANAGER.getPlayingTrack();
         if (track == null) {
             Console.println("Nothing is playing right now.");
             return;
@@ -117,7 +117,7 @@ public class TrackControlCommands implements CLICommand {
             if (seekValue < seekableZone) {
                 long newPosition = reverse ? position - seekValue : position + seekValue;
                 track.setPosition(newPosition);
-                Console.prln(Util.getNowPlayingBox(soundManager));
+                Console.prln(Util.getNowPlayingBox(SOUND_MANAGER));
             } else {
                 Console.println("The entered number is greater than track duration.");
             }
@@ -128,7 +128,7 @@ public class TrackControlCommands implements CLICommand {
 
     @Command(usages = "eq", desc = "Equalizer configuration.")
     public void eq(CommandEvent e) {
-        soundManager.activeEqualizer();
+        SOUND_MANAGER.activeEqualizer();
         // 0 1     2 3
         // eq bass + 1
         if (e.getArgs().length <= 3) {
@@ -140,9 +140,9 @@ public class TrackControlCommands implements CLICommand {
                 return;
             }
             if (e.getArgs()[2].equals("+")) {
-                soundManager.increaseBassBoost(diff);
+                SOUND_MANAGER.increaseBassBoost(diff);
             } else if (e.getArgs()[2].equals("-")) {
-                soundManager.decreaseBassBoost(diff);
+                SOUND_MANAGER.decreaseBassBoost(diff);
             }
         }
     }

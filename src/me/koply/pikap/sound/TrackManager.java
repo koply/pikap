@@ -48,7 +48,7 @@ public class TrackManager extends AudioEventAdapter {
             Console.prefixln("Added to queue. (" + Chalk.on(Util.strTrack(track)).green() + ")");
         } else {
             pipeline.prepareAndRun();
-            Console.println(Util.getNowPlayingBox(Main.soundManager) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+            Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
         }
         return isStarted;
     }
@@ -70,7 +70,7 @@ public class TrackManager extends AudioEventAdapter {
     public void play(AudioTrack track, PlayEvent.Reason reason) {
         boolean isStarted = play(track);
         EventManager.pushEvent(
-                new PlayEvent(Main.soundManager, track, !isStarted, reason));
+                new PlayEvent(Main.SOUND_MANAGER, track, !isStarted, reason));
     }
 
     /**
@@ -93,10 +93,10 @@ public class TrackManager extends AudioEventAdapter {
 
         String suffix = number != skipped ? Chalk.on("(" + number +")").red().toString() : "";
         Console.prln(Chalk.on("[ " + skipped + " -→ ] ").green().toString() + suffix);
-        Console.println(Util.getNowPlayingBox(Main.soundManager) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+        Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
 
         EventManager.pushEvent(
-                new NextTrackEvent(Main.soundManager, lastTrack, poll, NextTrackEvent.Reason.NEXT));
+                new NextTrackEvent(Main.SOUND_MANAGER, lastTrack, poll, NextTrackEvent.Reason.NEXT));
     }
 
     /**
@@ -114,7 +114,7 @@ public class TrackManager extends AudioEventAdapter {
 
         if (queue.size() == 0) {
             EventManager.pushEvent(
-                    new TrackEndEvent(Main.soundManager, track, endReason));
+                    new TrackEndEvent(Main.SOUND_MANAGER, track, endReason));
             Console.info("Empty queue...");
             return;
         }
@@ -124,10 +124,10 @@ public class TrackManager extends AudioEventAdapter {
         player.startTrack(poll, false);
 
         Console.prln(Chalk.on("[ -→ ]").green().toString());
-        Console.println(Util.getNowPlayingBox(Main.soundManager) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+        Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
 
         EventManager.pushEvent(
-                new NextTrackEvent(Main.soundManager, track, poll, NextTrackEvent.Reason.TRACK_END));
+                new NextTrackEvent(Main.SOUND_MANAGER, track, poll, NextTrackEvent.Reason.TRACK_END));
      }
 
 }

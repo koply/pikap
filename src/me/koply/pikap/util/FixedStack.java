@@ -11,6 +11,7 @@ public class FixedStack<T> implements Iterable<T> {
     private final Object[] array;
     public final int size;
 
+    private int dataCount = 0;
     private int cursor;
 
     public FixedStack(int size) {
@@ -21,6 +22,7 @@ public class FixedStack<T> implements Iterable<T> {
 
     public void push(T object) {
         array[cursor] = object;
+        dataCount++;
         if (cursor+1==size) cursor = 0;
         else cursor++;
     }
@@ -35,6 +37,7 @@ public class FixedStack<T> implements Iterable<T> {
     public T pop() {
         if (cursor == 0) cursor = size-1;
         else cursor--;
+        dataCount--;
         Object toreturn = array[cursor];
         array[cursor] = null;
         return (T) toreturn;
@@ -72,5 +75,9 @@ public class FixedStack<T> implements Iterable<T> {
     @Override
     public Spliterator<T> spliterator() {
         return Iterable.super.spliterator();
+    }
+
+    public int getDataCount() {
+        return dataCount;
     }
 }

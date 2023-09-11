@@ -59,7 +59,7 @@ public class SearchResultHandler implements AudioLoadResultHandler {
                 duration += playlist.get(i).getInfo().length;
             }
             Console.prefixln("The playlist queued with " + playlist.size() + " tracks. Total time: " + Util.formatMilliSecond(duration));
-            EventManager.pushEvent(new PlaylistEvent(Main.soundManager, audioPlaylist, duration));
+            EventManager.pushEvent(new PlaylistEvent(Main.SOUND_MANAGER, audioPlaylist, duration));
 
         } else if (queryData.playNow) { // pn command
             scheduler.play(playlist.get(0), PlayEvent.Reason.PLAY_NOW);
@@ -84,8 +84,8 @@ public class SearchResultHandler implements AudioLoadResultHandler {
 
             Console.println(sb.toString());
             int choice = Util.readInteger("Enter your choice.", 1, limitor);
-
-            scheduler.play(audioPlaylist.getTracks().get(choice - 1), PlayEvent.Reason.SEARCH);
+            if (choice != 0) scheduler.play(audioPlaylist.getTracks().get(choice - 1), PlayEvent.Reason.SEARCH);
+            else Console.prefixln("Order canceled.");
         }
 
         notifyCommandHandler();

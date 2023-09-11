@@ -6,8 +6,6 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class KeyboardListener implements NativeKeyListener {
 
@@ -16,7 +14,7 @@ public class KeyboardListener implements NativeKeyListener {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(this);
         } catch (NativeHookException ex) {
-            Console.info("There was a problem registering the native keyboard hook.");
+            Console.info("There was a problem while registering the native keyboard hook.");
         }
     }
 
@@ -25,29 +23,37 @@ public class KeyboardListener implements NativeKeyListener {
             GlobalScreen.unregisterNativeHook();
             GlobalScreen.removeNativeKeyListener(this);
         } catch (NativeHookException e) {
-            Console.info("There was a problem unregistering the native keyboard hook.");
+            Console.info("There was a problem while unregistering the native keyboard hook.");
         }
     }
 
-    Logger log = LoggerFactory.getLogger("KeyboardListener");
+    // keycode(win-linux) / rawcode(win-linux)
+    // previous 57360-0   / unknown-65302
+    // next 57369-0       / unknown-65303
+    // play/pause 57378-0 / unknown-65300
+    // stop unknown       / unknown-65301
 
-    // previous keyCode 57360
-    // next keyCode 57369
-    // play/pause keyCode 57378
-    // TODO LINUX KEYBINDINGS
+    private static final int PLAY_PAUSE_RAW = 65300;
+    private static final int STOP_RAW = 65301;
+    private static final int PREVIOUS_RAW = 65302;
+    private static final int NEXT_RAW = 65303;
+
     @Override
     public void nativeKeyPressed(NativeKeyEvent e) {
-        log.info("KeyPressed: " + e.getKeyCode());
-        switch (e.getKeyCode()) {
-            case 57378:
-                Main.soundManager.playPauseButton();
+        switch (e.getRawCode()) {
+            case PLAY_PAUSE_RAW: // play
+                if (Main.SOUND_MANAGER.isPaused()) {
+                    Main.SOUND_MANAGER.resume();
+                } else {
+                    Main.SOUND_MANAGER.pause();
+                }
                 break;
-            case 57369:
-                Main.soundManager.nextTrack(1);
-                break;
-            case 57360:
+            case PREVIOUS_RAW:
                 // previous
                 // TODO
+                break;
+            case NEXT_RAW:
+                Main.SOUND_MANAGER.nextTrack(1);
                 break;
             default:
                 break;
