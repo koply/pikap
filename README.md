@@ -41,16 +41,16 @@ sh run.sh
 - [ ] Equalizer for player
 - [ ] Support for SoundCloud, Twitch and local audio files.
 - [ ] Local web page for remote control the player
-- [ ] Database initialization and integration
+- [x] Database initialization and integration
 - [ ] Storing information of past songs with SQLite
 - [ ] Endless play mode with next suggested content from the song's YouTube page
-- [ ] Discord RPC
+- [x] Discord RPC
 - [x] More efficient input-output handler (maybe tui?)
 - [x] Colorized console handler with Chalk
 - [x] Enchance the play command
 - [ ] Config commands
 - [ ] Repeat and shuffle commands
-- [ ] Previous/back command
-- [ ] Queue/list command
+- [x] Previous/back command
+- [x] Queue/list command
 - [ ] Optional: Output device selector
 - [x] Optional: Advanced search command
