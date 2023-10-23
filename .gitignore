@@ -4,7 +4,7 @@
 /logs
 /lib
 dependency-reduced-pom.xml
-*.yml
-*.db
+./*.yml
+./*.db
 *.log
 *.iml

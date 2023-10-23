@@ -1,0 +1,17 @@
+debug: true
+
+# Default sqlite. just set it to false to disable it
+# Possible selections: sqlite, disable
+db: sqlite
+
+# Default data.db
+dbfile: data.db
+
+# Search result list count limitor. -1 is unlimited.
+searchlimitor: -1
+
+# Record tracks
+record: true
+
+# Recorded sounds folder
+recfolder: ./recs
