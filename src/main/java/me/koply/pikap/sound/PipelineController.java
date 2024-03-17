@@ -9,12 +9,12 @@ import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.sound.recorder.SoundRecorder;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
-import java.io.IOException;
-import java.io.InterruptedIOException;
+import javax.sound.sampled.*;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PipelineController implements Runnable {
 
@@ -95,8 +95,8 @@ public class PipelineController implements Runnable {
     @Override
     public void run() {
         int chunkSize;
-
         try {
+
             while ((chunkSize = stream.read(buffer)) >= 0) {
                 line.write(buffer, 0, chunkSize);
                 if (record) recorder.save(buffer);

@@ -19,10 +19,12 @@ public class KnownTrack {
     @DatabaseField(id = true)
     private int id;
 
-    @DatabaseField private String title; // VARCHAR(64)
+    // TODO MAX LENGTH
+    @DatabaseField private String title; // VARCHAR(100)
     @DatabaseField private String author; // VARCHAR(32)
     @DatabaseField private long length;
     @DatabaseField private String identifier; // VARCHAR(16)
+    // identifier is the YouTube key of the track
 
     public KnownTrack(int id, String title, String author, long length, String identifier) {
         this(title, author, length, identifier);
@@ -33,14 +35,14 @@ public class KnownTrack {
         this.title = title.length() > 64 ? title.substring(0,64) : title;
         this.author = author.length() > 32 ? author.substring(0,32) : author;
         this.length = length;
-        this.identifier = identifier.length() > 16 ? identifier.substring(0,16) : identifier;
+        this.identifier = identifier;
     }
 
     public KnownTrack(AudioTrackInfo info) {
         this(info.title, info.author, info.length, info.identifier);
     }
 
-    public KnownTrack() {}
+    public KnownTrack() { }
 
     public int getId() {
         return id;

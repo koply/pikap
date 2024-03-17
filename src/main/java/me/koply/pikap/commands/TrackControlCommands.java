@@ -8,6 +8,7 @@ import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.cli.command.OnlyInstance;
 import me.koply.pikap.sound.PlayQueryData;
+import me.koply.pikap.util.TrackBox;
 import me.koply.pikap.util.Util;
 
 import static me.koply.pikap.Main.SOUND_MANAGER;
@@ -71,7 +72,7 @@ public class TrackControlCommands implements CLICommand {
 
     @Command(usages = {"volume", "vol", "volum", "sound"}, desc = "Sets the volume of the song.")
     public void volume(CommandEvent e) {
-        if (e.getArgs().length < 1) {
+        if (e.getArgs().length < 2) {
            println("Current volume: " + SOUND_MANAGER.getVolume());
         }
         Integer volume = Util.parseInt(e.getArgs()[1]);
@@ -89,7 +90,7 @@ public class TrackControlCommands implements CLICommand {
         if (SOUND_MANAGER.getPlayingTrack() == null) {
             println("Silence...");
         } else {
-            Console.prln(Util.getNowPlayingBox(SOUND_MANAGER));
+            Console.prln(TrackBox.build(SOUND_MANAGER));
         }
     }
 
@@ -117,7 +118,7 @@ public class TrackControlCommands implements CLICommand {
             if (seekValue < seekableZone) {
                 long newPosition = reverse ? position - seekValue : position + seekValue;
                 track.setPosition(newPosition);
-                Console.prln(Util.getNowPlayingBox(SOUND_MANAGER));
+                Console.prln(TrackBox.build(SOUND_MANAGER));
             } else {
                 Console.println("The entered number is greater than track duration.");
             }

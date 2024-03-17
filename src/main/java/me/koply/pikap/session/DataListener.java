@@ -13,6 +13,8 @@ public class DataListener extends EventListenerAdapter {
 
     @Override
     public void onPlay(PlayEvent e) {
+        Console.println("Length: " + e.track.getInfo().length);
+
         if (!e.isAddedToQueue) {
             store.getPlayingNow().setPlayingTrack(e.track);
             store.setCurrentState(State.PLAYING_TRACK);

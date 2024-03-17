@@ -2,8 +2,22 @@ package me.koply.pikap.util;
 
 import com.github.tomaslanger.chalk.Ansi;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import me.koply.pikap.sound.SoundManager;
 
-public class TrackBoxBuilder {
+public class TrackBox {
+
+    public static String build(SoundManager soundManager) {
+        AudioTrack nowPlayin = soundManager.getPlayingTrack();
+        boolean isPause = soundManager.isPaused();
+        int volume = soundManager.getVolume();
+
+        return TrackBox.buildTrackBox(75, nowPlayin, isPause, volume);
+    }
+
+    public static String buildTrackBox(int width, AudioTrack track, boolean isPaused, int volume) {
+        return boxify(width, buildFirstLine(width - 4, track), buildSecondLine(width - 4, track, isPaused, volume));
+    }
+
     private static final String TOP_LEFT_CORNER = "\u2554";
     private static final String TOP_RIGHT_CORNER = "\u2557";
     private static final String BOTTOM_LEFT_CORNER = "\u255a";
@@ -12,10 +26,6 @@ public class TrackBoxBuilder {
     private static final String BORDER_VERTICAL = "\u2551";
     private static final String PROGRESS_FILL = "\u25a0";
     private static final String PROGRESS_EMPTY = "\u2015";
-
-    public static String buildTrackBox(int width, AudioTrack track, boolean isPaused, int volume) {
-        return boxify(width, buildFirstLine(width - 4, track), buildSecondLine(width - 4, track, isPaused, volume));
-    }
 
     private static String buildFirstLine(int width, AudioTrack track) {
         StringBuilder builder = new StringBuilder();

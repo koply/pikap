@@ -44,11 +44,11 @@ public class EventManager {
         }
     }
 
+    // works asynchronously
     public static void pushEvent(Object eventObject) {
         if (eventObject == null) throw new IllegalArgumentException("The event cannot be null.");
         if (!(eventObject instanceof AudioEvent)) throw new IllegalArgumentException("eventObject must be an AudioEvent instance.");
         if (listeners.containsKey(eventObject.getClass())) {
-            // async
             EXECUTOR_SERVICE.submit(() -> {
                 try {
                     for (var data : listeners.get(eventObject.getClass())) {

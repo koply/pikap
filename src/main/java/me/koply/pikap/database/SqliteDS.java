@@ -8,6 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.database.model.KnownTrack;
+import me.koply.pikap.database.model.RecordedTrack;
 import me.koply.pikap.util.Util;
 
 import java.sql.SQLException;
@@ -61,9 +62,11 @@ public class SqliteDS implements Database {
 
     // --------- DAOs ----------
     private Dao<KnownTrack, Integer> knownTracks;
+    private Dao<RecordedTrack, Integer> recordedTracks;
 
     private void initializeDaos(ConnectionSource connectionSource) throws SQLException {
         knownTracks = createDaoAndTableIfNotExists(connectionSource, KnownTrack.class);
+        recordedTracks = createDaoAndTableIfNotExists(connectionSource, RecordedTrack.class);
     }
 
     private <Z, Y> Dao<Z, Y> createDaoAndTableIfNotExists(ConnectionSource connectionSource, Class<Z> clazz) throws SQLException {
