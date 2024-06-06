@@ -10,9 +10,12 @@ import me.koply.pikap.database.DBFactory;
 import me.koply.pikap.database.Database;
 import me.koply.pikap.database.Databases;
 import me.koply.pikap.discord.DiscordRPC;
+import me.koply.pikap.event.EventManager;
 import me.koply.pikap.keyhook.KeyboardListener;
 import me.koply.pikap.session.SessionData;
 import me.koply.pikap.sound.SoundManager;
+import me.koply.pikap.sound.recorder.RecordedTracksManager;
+import me.koply.pikap.test.AudioEventDebugger;
 import me.koply.pikap.util.FileUtil;
 import me.koply.pikap.util.Util;
 
@@ -29,6 +32,7 @@ public class Main {
 
     public static boolean resetConfig = false; // for development
     public static final ConfigManager CONFIG = new ConfigManager(new File("./config.yml"));
+    public static final RecordedTracksManager RECORD_MANAGER = new RecordedTracksManager();
 
     public static Database repository;
     public static final SessionData SESSION = new SessionData();
@@ -60,14 +64,22 @@ public class Main {
             }
         }
 
+        if (CONFIG.entryCheckIgnoreCase("record", "true", "yes")) {
+            RECORD_MANAGER.readTrackFiles();
+        }
+
         SOUND_MANAGER.initialize();
 
-        KEY_LISTENER.registerHook();
+        // TODO: Windows Error
+        // KEY_LISTENER.registerHook();
+
         //Console.info("Initializing the Discord RPC module.");
         //DISCORD_RPC.loadAsync();
         //Console.info("Discord RPC initialized.");
 
-        // EventManager.registerListener(new AudioEventDebugger());
+        if (CONFIG.isDebug()) {
+            EventManager.registerListener(new AudioEventDebugger());
+        }
         // EventManager.debugListeners();
 
         // registers the data store's listener object to the EventManager

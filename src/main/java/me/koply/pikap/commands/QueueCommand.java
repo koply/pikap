@@ -38,7 +38,7 @@ public class QueueCommand implements CLICommand {
     @Command(usages = "last", desc = "Queue's the last track.")
     public void last(CommandEvent e) {
         // TODO - last with numbers for played previously
-        AudioTrack last = SESSION.getLastTrack().makeClone();
+        AudioTrack last = SESSION.popLastTrack().makeClone();
         SoundManager.getTrackManager().play(last, PlayEvent.Reason.PLAY_LAST);
     }
 

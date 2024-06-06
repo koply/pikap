@@ -2,6 +2,7 @@ package me.koply.pikap.session;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 public class Playing {
 
@@ -15,6 +16,9 @@ public class Playing {
      */
     private AudioPlaylist playingPlaylist;
 
+    public AudioTrackInfo getTrackInfo() {
+        return playingTrack.getInfo();
+    }
 
     public AudioTrack getPlayingTrack() {
         return playingTrack;

@@ -2,6 +2,7 @@ package me.koply.pikap.config;
 
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
+import me.koply.pikap.util.StringUtil;
 import me.koply.pikap.util.FileUtil;
 import me.koply.pikap.util.LightYML;
 import me.koply.pikap.util.Util;
@@ -57,7 +58,17 @@ public class ConfigManager extends LightYML {
     }
 
     public boolean recordCheck() {
-        String entry = Main.CONFIG.get("record");
-        return entry != null && entry.equalsIgnoreCase("true");
+        String entry = get("record");
+        return entry != null && (StringUtil.anyEqualsIgnoreCase(entry, "true", "yes", "on", "okey"));
+    }
+
+    public boolean entryCheckIgnoreCase(String entry, String...values) {
+        String ent = get(entry);
+        return ent != null && (StringUtil.anyEqualsIgnoreCase(ent, values));
+    }
+
+    public boolean entryCheck(String entry, String...values) {
+        String ent = get(entry);
+        return ent != null && (StringUtil.anyEquals(ent, values));
     }
 }

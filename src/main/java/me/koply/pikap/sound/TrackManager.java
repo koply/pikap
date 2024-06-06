@@ -11,8 +11,8 @@ import me.koply.pikap.api.event.NextTrackEvent;
 import me.koply.pikap.api.event.PlayEvent;
 import me.koply.pikap.api.event.TrackEndEvent;
 import me.koply.pikap.event.EventManager;
+import me.koply.pikap.util.StringUtil;
 import me.koply.pikap.util.TrackUtil;
-import me.koply.pikap.util.Util;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -49,7 +49,7 @@ public class TrackManager extends AudioEventAdapter {
             Console.prefixln("Added to queue. (" + Chalk.on(TrackUtil.trackToString(track)).green() + ")");
         } else {
             pipeline.prepareAndRun();
-            Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+            Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
         }
         return isStarted;
     }
@@ -86,8 +86,8 @@ public class TrackManager extends AudioEventAdapter {
         int skipped = 0;
         for (int i = 0; i<number; i++) {
             poll = queue.poll();
-            skipped += 1;
             if (queue.isEmpty()) break;
+            skipped += 1;
         }
 
         AudioTrack lastTrack = player.getPlayingTrack();
@@ -95,7 +95,7 @@ public class TrackManager extends AudioEventAdapter {
 
         String suffix = number != skipped ? Chalk.on("(" + number +")").red().toString() : "";
         Console.prln(Chalk.on("[ " + skipped + " -→ ] ").green().toString() + suffix);
-        Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+        Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
 
         EventManager.pushEvent(
                 new NextTrackEvent(Main.SOUND_MANAGER, lastTrack, poll, NextTrackEvent.Reason.NEXT));
@@ -126,7 +126,7 @@ public class TrackManager extends AudioEventAdapter {
         player.startTrack(poll, false);
 
         Console.prln(Chalk.on("[ -→ ]").green().toString());
-        Console.println(Util.getNowPlayingBox(Main.SOUND_MANAGER) + Chalk.on(" [" + Util.getCurrentTime() + "]").yellow());
+        Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
 
         EventManager.pushEvent(
                 new NextTrackEvent(Main.SOUND_MANAGER, track, poll, NextTrackEvent.Reason.TRACK_END));

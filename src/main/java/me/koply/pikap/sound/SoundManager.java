@@ -39,7 +39,7 @@ public class SoundManager {
         // we don't need a bunch of these sources
         // AudioSourceManagers.registerRemoteSources(playerManager);
         // just YouTube for now
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true));
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
 
         playerManager.getConfiguration().setOutputFormat(COMMON_PCM_S16_BE);
         playerManager.setPlayerCleanupThreshold(TimeUnit.HOURS.toMillis(24));
@@ -129,10 +129,13 @@ public class SoundManager {
     }
 
     public void stop() {
+        AudioTrack lastTrack = player.getPlayingTrack() != null ? player.getPlayingTrack().makeClone() : null;
+        if (lastTrack != null) {
+            EventManager.pushEvent(
+                    new TrackEndEvent(Main.SOUND_MANAGER, lastTrack, AudioTrackEndReason.STOPPED));
+        }
         player.stopTrack();
         pipeline.shutdownThread(); // be careful
-        EventManager.pushEvent(
-                new TrackEndEvent(Main.SOUND_MANAGER, player.getPlayingTrack(), AudioTrackEndReason.STOPPED));
 
         Console.info("Track stopped.");
     }

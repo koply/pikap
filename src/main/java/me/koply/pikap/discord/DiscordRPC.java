@@ -96,7 +96,7 @@ public class DiscordRPC implements Runnable {
         activity.timestamps().setStart(start);
 
 
-        // We are in a party with 10 out of 100 people.
+        // We are at a party with 10 out of 100 people.
         //activity.party().size().setMaxSize(100);
         //activity.party().size().setCurrentSize(10);
 

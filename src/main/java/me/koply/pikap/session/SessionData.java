@@ -3,8 +3,7 @@ package me.koply.pikap.session;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.koply.pikap.event.EventManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class SessionData {
 
@@ -22,27 +21,28 @@ public class SessionData {
     /**
      * Last played 10 tracks.
      */
-    private final List<AudioTrack> previousTracks = new ArrayList<>(10);
+    private final Stack<AudioTrack> previousTracks = new Stack<>();
 
     private Playing playingNow;
     // TODO
 
-    public List<AudioTrack> getPreviousTracks() {
+    public Stack<AudioTrack> getPreviousTracks() {
         return previousTracks;
     }
 
-    public AudioTrack getLastTrack() {
+    public AudioTrack popLastTrack() {
         if (previousTracks.isEmpty()) {
             return null;
         } else {
-            return previousTracks.get(previousTracks.size()-1);
+            return previousTracks.pop();
         }
     }
 
     public void addTrack(AudioTrack track) {
-        AudioTrack last = getLastTrack();
-        if (last != null && last.getInfo() != track.getInfo()) {
-            previousTracks.add(track);
+        if (previousTracks.isEmpty()) {
+            previousTracks.push(track);
+        } else if (previousTracks.get(0).getInfo() != track.getInfo()) {
+            previousTracks.push(track);
         }
     }
 

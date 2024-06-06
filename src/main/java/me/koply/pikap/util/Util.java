@@ -1,8 +1,6 @@
 package me.koply.pikap.util;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.koply.pikap.api.cli.Console;
-import me.koply.pikap.sound.SoundManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -99,12 +97,9 @@ public final class Util {
         }
     }
 
-    public static String getNowPlayingBox(SoundManager soundManager) {
-        AudioTrack nowPlayin = soundManager.getPlayingTrack();
-        boolean isPause = soundManager.isPaused();
-        int volume = soundManager.getVolume();
-
-        return TrackBoxBuilder.buildTrackBox(75, nowPlayin, isPause, volume);
+    public static String getTrackFileName() {
+        // PTF -> Pikap Track File
+        return "track_" + getDateForFileName() + ".ptf";
     }
 
     public static String getLogName() {
