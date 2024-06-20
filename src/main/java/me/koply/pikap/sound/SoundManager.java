@@ -4,9 +4,13 @@ import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.clients.AndroidLite;
+import dev.lavalink.youtube.clients.Music;
+import dev.lavalink.youtube.clients.MusicWithThumbnail;
+import dev.lavalink.youtube.clients.Web;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.PauseEvent;
@@ -39,7 +43,7 @@ public class SoundManager {
         // we don't need a bunch of these sources
         // AudioSourceManagers.registerRemoteSources(playerManager);
         // just YouTube for now
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager());
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true, new Web(), new Music(), new MusicWithThumbnail(), new AndroidLite()));
 
         playerManager.getConfiguration().setOutputFormat(COMMON_PCM_S16_BE);
         playerManager.setPlayerCleanupThreshold(TimeUnit.HOURS.toMillis(24));
@@ -66,7 +70,7 @@ public class SoundManager {
         Console.info("Searching... \"" + data.order + "\"");
 
         handler.setQueryData(data);
-        String order = data.isUrl ? data.order : "ytsearch:"+data.order;
+        String order = data.isUrl ? data.order : (data.isMusic ? "ytmsearch:"+data.order : "ytsearch:"+data.order);
         playerManager.loadItem(order, handler);
     }
 
