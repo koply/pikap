@@ -1,6 +1,5 @@
 package me.koply.pikap.session;
 
-import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.*;
 
 public class SessionDataListener extends EventListenerAdapter {
