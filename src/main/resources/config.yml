@@ -14,4 +14,4 @@ searchlimitor: -1
 record: true
 
 # Recorded sounds folder
-recfolder: ./recs
+recfolder: ./recs/
