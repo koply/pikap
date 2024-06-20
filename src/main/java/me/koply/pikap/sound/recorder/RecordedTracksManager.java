@@ -13,25 +13,33 @@ public class RecordedTracksManager {
     private final List<ReadableTrackFile> trackFiles = new ArrayList<>();
 
     public RecordedTracksManager() {
-        if (!CONFIG.recordCheck()) {
-            Console.warn("The config entry named as 'record' was not setted to true.");
-        }
+
     }
 
     public void readTrackFiles() {
+        if (!CONFIG.recordCheck()) {
+            Console.info("Record option is not enabled.");
+            return;
+        }
+
         String recFolderPath = CONFIG.get("recfolder");
         if (recFolderPath == null) {
-            Console.warn("Record files cannot be read.");
-            Console.warn("The config entry named as 'recfolder' was not setted to folder path.");
+            Console.warn("Recfolder options is not correct.");
             return;
         }
 
         File folder = new File(recFolderPath);
+        if (!folder.isDirectory()) {
+            folder.mkdir();
+        }
+
         File[] files = folder.listFiles();
-        if (!folder.isDirectory() || files == null) {
-            Console.warn("The config entry named as 'recfolder' isn't points a directory.");
+        if (files == null) {
+            Console.info("Cannot read the recfolder files.");
             return;
         }
+
+        Console.info("Recorded track files found: " + files.length);
 
         for (File file : files) {
             if (file.getName().endsWith(".ptf")) {

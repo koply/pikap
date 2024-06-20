@@ -1,7 +1,10 @@
-package me.koply.pikap.database;
+package me.koply.pikap.database.branch;
 
+import me.koply.pikap.database.api.Database;
+
+// TODO: Change it to AOP style with class annotation
 public enum Databases {
-    SQLITE(SqliteDS.class);
+    SQLITE(SqliteDB.class);
 
     public final Class<? extends Database> repositoryClass;
     Databases(Class<? extends Database> repositoryClass) {

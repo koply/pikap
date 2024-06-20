@@ -6,9 +6,10 @@ import me.koply.pikap.api.cli.command.CommandHandler;
 import me.koply.pikap.commands.HelpCommand;
 import me.koply.pikap.commands.TrackControlCommands;
 import me.koply.pikap.config.ConfigManager;
-import me.koply.pikap.database.DBFactory;
-import me.koply.pikap.database.Database;
-import me.koply.pikap.database.Databases;
+import me.koply.pikap.database.PikapEventListener;
+import me.koply.pikap.database.api.DBFactory;
+import me.koply.pikap.database.api.Database;
+import me.koply.pikap.database.branch.Databases;
 import me.koply.pikap.discord.DiscordRPC;
 import me.koply.pikap.event.EventManager;
 import me.koply.pikap.keyhook.KeyboardListener;
@@ -19,32 +20,27 @@ import me.koply.pikap.test.AudioEventDebugger;
 import me.koply.pikap.util.FileUtil;
 import me.koply.pikap.util.Util;
 
-import java.io.File;
-
 public class Main {
 
     static {
-        //SysErrToSlf4J.redirectSysErr(LoggerFactory.getLogger("SysErr"));
+        // SysErrToSlf4J.redirectSysErr(LoggerFactory.getLogger("SysErr"));
         String logName = Util.getLogName();
-        FileUtil.createDirectory(new File("logs/"));
+        FileUtil.createDirectory(Constants.LOGS_FOLDER);
         System.setProperty("org.slf4j.simpleLogger.logFile", "logs/" + logName);
     }
 
     public static boolean resetConfig = false; // for development
-    public static final ConfigManager CONFIG = new ConfigManager(new File("./config.yml"));
+    public static final ConfigManager CONFIG = new ConfigManager(Constants.CONFIG_FILE);
     public static final RecordedTracksManager RECORD_MANAGER = new RecordedTracksManager();
 
-    public static Database repository;
     public static final SessionData SESSION = new SessionData();
 
     public static final SoundManager SOUND_MANAGER = new SoundManager();
 
-    // for DiscordRPC Library
-    public static final File LIB_FOLDER = new File("lib/");
-    public static final DiscordRPC DISCORD_RPC = new DiscordRPC();
-
     private static final KeyboardListener KEY_LISTENER = new KeyboardListener();
     private static final CommandHandler COMMAND_HANDLER = new CommandHandler(HelpCommand.class.getPackageName());
+
+    private static Database repository;
 
     // hello world, ConfigManager initialization, database initialization, SoundManager initialization, SessionDataStore initialization
     public static void main(String[] args) {
@@ -61,6 +57,8 @@ public class Main {
             if (!success) {
                 Console.warn("PANIC! Database connection isn't established. Check the credentials/file identifies.");
                 return;
+            } else {
+                EventManager.registerListener(new PikapEventListener(repository));
             }
         }
 
@@ -73,16 +71,20 @@ public class Main {
         // TODO: Windows Error
         // KEY_LISTENER.registerHook();
 
-        //Console.info("Initializing the Discord RPC module.");
-        //DISCORD_RPC.loadAsync();
-        //Console.info("Discord RPC initialized.");
+        Console.info("Initializing the Discord RPC module.");
+        if (DiscordRPC.getInstance().prepare()) {
+            DiscordRPC.getInstance().loadAsync();
+            Console.info("Discord RPC initialized.");
+        } else {
+            Console.info("Discord RPC is not initialized. Disabling module...");
+        }
 
         if (CONFIG.isDebug()) {
             EventManager.registerListener(new AudioEventDebugger());
         }
         // EventManager.debugListeners();
 
-        // registers the data store's listener object to the EventManager
+        // registers the listener of the data store to the EventManager
         SESSION.registerListener();
 
         COMMAND_HANDLER.registerInstance(TrackControlCommands.getInstance());
@@ -90,5 +92,9 @@ public class Main {
         // blocks the main thread
         COMMAND_HANDLER.startNewHandler();
         System.exit(0);
+    }
+
+    public static Database getRepository() {
+        return repository;
     }
 }

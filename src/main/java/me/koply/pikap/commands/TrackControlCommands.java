@@ -9,6 +9,7 @@ import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.cli.command.OnlyInstance;
 import me.koply.pikap.sound.PlayQueryData;
 import me.koply.pikap.util.TrackBox;
+import me.koply.pikap.util.TrackUtil;
 import me.koply.pikap.util.Util;
 
 import static me.koply.pikap.Main.SOUND_MANAGER;
@@ -22,10 +23,11 @@ public class TrackControlCommands implements CLICommand {
     }
 
     @Command(usages = {"play", "p", "pn", "pp", "search"},
-            desc = "You can play songs. 'pn' for play first result. 'pp' for play-playlist.")
+            desc = "You can play songs. 'pn' for play first result. 'pp' for play-playlist. 'pm' for YoutubeMusic search.")
     public void play(CommandEvent e) {
         String order = e.getPureCommand().substring(e.getArgs()[0].length()).trim();
         boolean now = e.getArgs()[0].endsWith("n");
+        boolean music = e.getArgs()[0].endsWith("m");
         boolean playlist = e.getArgs()[0].length() == 2 && e.getArgs()[0].endsWith("p");
 
         if (order.isEmpty()) {
@@ -33,7 +35,7 @@ public class TrackControlCommands implements CLICommand {
             return;
         }
         boolean isUrl = Util.isUrl(order);
-        SOUND_MANAGER.playTrack(new PlayQueryData(order, isUrl, playlist, now));
+        SOUND_MANAGER.playTrack(new PlayQueryData(order, isUrl, playlist, now, music));
 
         try {
             synchronized (instance) {
@@ -89,8 +91,12 @@ public class TrackControlCommands implements CLICommand {
     public void nowPlaying(CommandEvent e) {
         if (SOUND_MANAGER.getPlayingTrack() == null) {
             println("Silence...");
-        } else {
-            Console.prln(TrackBox.build(SOUND_MANAGER));
+            return;
+        }
+        Console.prln(TrackBox.build(SOUND_MANAGER));
+
+        if (e.getArgs().length > 1) {
+            Console.prln(TrackUtil.trackToStringDetailed(SOUND_MANAGER.getPlayingTrack().getInfo()));
         }
     }
 

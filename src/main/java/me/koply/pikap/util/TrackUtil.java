@@ -13,4 +13,8 @@ public class TrackUtil {
         return info.author + " - " + info.title + " ["+ Util.formatMilliSecond(info.length) +"]";
     }
 
+    public static String trackToStringDetailed(AudioTrackInfo info) {
+        return info.author + " - " + info.title + " ["+ Util.formatMilliSecond(info.length) +"], (" + info.identifier + "), " + "(" + info.uri + ")";
+    }
+
 }

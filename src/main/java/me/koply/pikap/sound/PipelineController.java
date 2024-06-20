@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import me.koply.pikap.Constants;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
+import me.koply.pikap.session.SessionData;
 import me.koply.pikap.sound.recorder.SoundRecorder;
 
 import javax.sound.sampled.*;
@@ -99,6 +100,7 @@ public class PipelineController implements Runnable {
 
             while ((chunkSize = stream.read(buffer)) >= 0) {
                 line.write(buffer, 0, chunkSize);
+                SessionData.bufferCycles.incrementAndGet();
                 if (record) recorder.save(buffer);
 
                 if (isPause) break;
