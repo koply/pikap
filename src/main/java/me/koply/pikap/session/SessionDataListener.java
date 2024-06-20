@@ -3,18 +3,16 @@ package me.koply.pikap.session;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.*;
 
-public class DataListener extends EventListenerAdapter {
+public class SessionDataListener extends EventListenerAdapter {
 
     private final SessionData store;
 
-    public DataListener(SessionData store) {
+    public SessionDataListener(SessionData store) {
         this.store = store;
     }
 
     @Override
     public void onPlay(PlayEvent e) {
-        Console.println("Length: " + e.track.getInfo().length);
-
         if (!e.isAddedToQueue) {
             store.getPlayingNow().setPlayingTrack(e.track);
             store.setCurrentState(State.PLAYING_TRACK);

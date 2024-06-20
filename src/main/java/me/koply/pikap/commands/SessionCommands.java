@@ -15,7 +15,7 @@ import static me.koply.pikap.Main.SESSION;
 
 public class SessionCommands implements CLICommand {
 
-    @Command(usages = {"showsession"}, desc = "Shows the previous tracks of the current session.")
+    @Command(usages = {"past", "session", "showsession"}, desc = "Shows the previous tracks of the current session.")
     public void som(CommandEvent e) {
         StringBuilder sb = new StringBuilder();
         sb.append(Chalk.on("Current state: ").yellow().toString())
@@ -26,7 +26,7 @@ public class SessionCommands implements CLICommand {
         } else {
             sb.append("-");
         }
-        sb.append(Ansi.Color.BLUE.getEnd());
+        sb.append(Ansi.Color.BLUE.getEnd()).append("\n");
 
         List<AudioTrack> tracks = SESSION.getPreviousTracks();
 
@@ -34,7 +34,7 @@ public class SessionCommands implements CLICommand {
             if (tracks.get(i) == null) continue;
             if (tracks.get(i).getInfo() == null) continue;
 
-            sb.append("\n").append(Ansi.Color.YELLOW.getStart()).append("[").append(i+1).append("] ").append(Ansi.Color.YELLOW.getEnd())
+            sb.append(Ansi.Color.YELLOW.getStart()).append("[").append(i+1).append("] ").append(Ansi.Color.YELLOW.getEnd())
                     .append(Ansi.Color.BLUE.getStart())
                     .append(TrackUtil.trackToString(tracks.get(i))).append(Ansi.Color.BLUE.getEnd()).append("\n");
         }
