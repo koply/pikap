@@ -2,6 +2,7 @@ package me.koply.pikap.discord;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import me.koply.pikap.Main;
 import me.koply.pikap.api.event.*;
 
 import java.time.Instant;
@@ -20,7 +21,7 @@ public class RPCTrackListener extends EventListenerAdapter {
 
     @Override
     public void onTrackEnd(TrackEndEvent e) {
-        if (!e.reason.mayStartNext) {
+        if (Main.SOUND_MANAGER.getQueue().isEmpty()) {
             rpc.setActivity(rpc.createDefaultActivityWithTimestamp());
             rpc.getCore().activityManager().updateActivity(rpc.getActivity());
         }

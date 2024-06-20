@@ -4,7 +4,7 @@ import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.activity.Activity;
 import de.jcm.discordgamesdk.activity.ActivityType;
-import me.koply.pikap.Main;
+import me.koply.pikap.Constants;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.event.EventManager;
 import me.koply.pikap.util.FileUtil;
@@ -20,28 +20,24 @@ public class DiscordRPC implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger("DiscordRPC");
 
+    private static DiscordRPC rpc;
+    public static DiscordRPC getInstance() {
+        return rpc != null ? rpc : (rpc = new DiscordRPC());
+    }
+
     public final Instant start;
     private final RPCTrackListener listener;
 
     public DiscordRPC() {
         start = Instant.now();
         listener = new RPCTrackListener(this);
+
     }
 
     public void loadAsync() {
-        Thread thread = new Thread(this);
-        thread.start();
-
-        EventManager.registerListener(listener);
+        Thread rpcThread = new Thread(this);
+        rpcThread.start();
     }
-
-    public void clearActivity() {
-        if (core != null) {
-            core.activityManager().clearActivity();
-        }
-    }
-
-    private CreateParams params;
 
     private Core core;
     public Core getCore() {
@@ -65,28 +61,38 @@ public class DiscordRPC implements Runnable {
     public Activity createDefaultActivity() {
         Activity act = new Activity();
         act.setType(ActivityType.LISTENING);
-        activity.setDetails("Idle");
-        activity.assets().setLargeImage("plak2");
-        activity.assets().setLargeText("Pikap");
+        act.setDetails("Idle");
+        act.assets().setLargeImage("plak2");
+        act.assets().setLargeText("Pikap");
 
         return act;
     }
 
-    @Override
-    public void run() {
+    // works sync
+    public boolean prepare() {
         File libFile = getLibraryFile();
         if (libFile == null) {
             Console.prefixln("DiscordRPC cannot be initialized. Further details in log file.");
-            return;
+            return false;
         }
 
         Core.init(libFile);
 
-        params = new CreateParams();
+        CreateParams params = new CreateParams();
         params.setClientID(1150793311997657262L);
-        params.setFlags(CreateParams.getDefaultFlags());
+        params.setFlags(CreateParams.Flags.NO_REQUIRE_DISCORD);
 
-        core = new Core(params);
+        try {
+            core = new Core(params);
+            EventManager.registerListener(listener);
+            return true;
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
+    @Override
+    public void run() {
         activity = new Activity();
         activity.setType(ActivityType.LISTENING);
         activity.setDetails("Idle");
@@ -123,9 +129,9 @@ public class DiscordRPC implements Runnable {
 
     private static File getLibraryFile() {
         try {
-            DLResult result = LibraryDL.downloadDiscordLibrary(Main.LIB_FOLDER);
+            DLResult result = LibraryDL.downloadDiscordLibrary(Constants.LIB_FOLDER);
 
-            FileUtil.createDirectory(Main.LIB_FOLDER);
+            FileUtil.createDirectory(Constants.LIB_FOLDER);
 
             if (result.status == DLStatus.DOWNLOADED || result.status == DLStatus.EXISTS) {
                 return result.file;
@@ -141,7 +147,12 @@ public class DiscordRPC implements Runnable {
 
             return null;
         }
+    }
 
+    public void clearActivity() {
+        if (core != null) {
+            core.activityManager().clearActivity();
+        }
     }
 
 }

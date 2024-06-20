@@ -24,12 +24,11 @@ public class QueueCommand implements CLICommand {
         StringBuilder sb = new StringBuilder();
 
         int i = 1;
-        for (AudioTrack previousTrack : Main.SOUND_MANAGER.getQueue()) {
-            AudioTrackInfo trackInfo = previousTrack.getInfo();
-            sb.append(YELLOW.getStart()).append("[").append(i).append("] ").append(YELLOW.getEnd());
+        for (AudioTrack track : Main.SOUND_MANAGER.getQueue()) {
+            AudioTrackInfo trackInfo = track.getInfo();
+            sb.append(YELLOW.getStart()).append("[").append(i++).append("] ").append(YELLOW.getEnd());
             sb.append(BLUE.getStart()).append(trackInfo.title).append(" - ").append(Util.formatMilliSecond(trackInfo.length));
             sb.append(BLUE.getEnd()).append("\n");
-            i++;
         }
 
         Console.println(sb.toString());
