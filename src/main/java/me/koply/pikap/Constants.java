@@ -2,6 +2,8 @@ package me.koply.pikap;
 
 import com.github.tomaslanger.chalk.Chalk;
 
+import java.io.File;
+
 import static com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats.COMMON_PCM_S16_BE;
 
 public class Constants {
@@ -28,6 +30,11 @@ public class Constants {
     public static final String YT_URL_PREFIX = "https://www.youtube.com/watch?v=";
 
     // SUM
-    public final static byte[] PTF_HEADER_PREFIX = new byte[] { 0x53, 0x55, 0x4D };
+    public static final byte[] PTF_HEADER_PREFIX = new byte[] { 0x53, 0x55, 0x4D };
 
+    public static final File CONFIG_FILE = new File("./config.yml");
+
+    public static final File LOGS_FOLDER = new File("logs/");
+
+    public static final File LIB_FOLDER = new File("lib/");
 }
