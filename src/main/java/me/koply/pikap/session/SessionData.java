@@ -4,12 +4,13 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.koply.pikap.event.EventManager;
 
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class SessionData {
 
-    private final DataListener sessionDataListener;
+    private final SessionDataListener sessionDataListener;
     public SessionData() {
-        sessionDataListener = new DataListener(this);
+        sessionDataListener = new SessionDataListener(this);
     }
 
     public void registerListener() {
@@ -17,6 +18,7 @@ public class SessionData {
     }
 
     private State currentState = State.IDLE; // getter, setter
+    public static final AtomicLong bufferCycles = new AtomicLong();
 
     /**
      * Last played 10 tracks.
@@ -63,4 +65,5 @@ public class SessionData {
         this.playingNow = playingNow;
         return this;
     }
+
 }
