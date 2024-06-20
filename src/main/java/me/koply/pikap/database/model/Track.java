@@ -4,8 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
-@DatabaseTable(tableName = "knowntracks")
-public class KnownTrack {
+@DatabaseTable(tableName = "tracks")
+public class Track {
 
     // unused
     private static final String CREATE_TRACKS_TABLE = "CREATE TABLE [IF NOT EXISTS] knowntracks (\n" +
@@ -16,7 +16,7 @@ public class KnownTrack {
             "identifier VARCHAR(16)\n" +
             ");";
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true, columnName = "id")
     private int id;
 
     // TODO MAX LENGTH
@@ -26,23 +26,23 @@ public class KnownTrack {
     @DatabaseField private String identifier; // VARCHAR(16)
     // identifier is the YouTube key of the track
 
-    public KnownTrack(int id, String title, String author, long length, String identifier) {
+    public Track(int id, String title, String author, long length, String identifier) {
         this(title, author, length, identifier);
         this.id = id;
     }
 
-    public KnownTrack(String title, String author, long length, String identifier) {
+    public Track(String title, String author, long length, String identifier) {
         this.title = title.length() > 64 ? title.substring(0,64) : title;
         this.author = author.length() > 32 ? author.substring(0,32) : author;
         this.length = length;
         this.identifier = identifier;
     }
 
-    public KnownTrack(AudioTrackInfo info) {
+    public Track(AudioTrackInfo info) {
         this(info.title, info.author, info.length, info.identifier);
     }
 
-    public KnownTrack() { }
+    public Track() { }
 
     public int getId() {
         return id;
@@ -52,7 +52,7 @@ public class KnownTrack {
         return title;
     }
 
-    public KnownTrack setTitle(String title) {
+    public Track setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -61,7 +61,7 @@ public class KnownTrack {
         return author;
     }
 
-    public KnownTrack setAuthor(String author) {
+    public Track setAuthor(String author) {
         this.author = author;
         return this;
     }
@@ -70,7 +70,7 @@ public class KnownTrack {
         return length;
     }
 
-    public KnownTrack setLength(long length) {
+    public Track setLength(long length) {
         this.length = length;
         return this;
     }
@@ -79,7 +79,7 @@ public class KnownTrack {
         return identifier;
     }
 
-    public KnownTrack setIdentifier(String identifier) {
+    public Track setIdentifier(String identifier) {
         this.identifier = identifier;
         return this;
     }
