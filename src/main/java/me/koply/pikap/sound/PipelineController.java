@@ -12,10 +12,6 @@ import me.koply.pikap.sound.recorder.SoundRecorder;
 
 import javax.sound.sampled.*;
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PipelineController implements Runnable {
 
