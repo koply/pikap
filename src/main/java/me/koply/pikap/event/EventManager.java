@@ -44,6 +44,28 @@ public class EventManager {
         }
     }
 
+    public static void unregisterListener(Object listener) {
+        if (!(listener instanceof EventListenerAdapter)) throw new IllegalArgumentException("The listener must be a PlayerListenerAdapter");
+        Class<? extends EventListenerAdapter> clazz = listener.getClass().asSubclass(EventListenerAdapter.class);
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        Method[] adaptersMethods = EventListenerAdapter.class.getDeclaredMethods();
+        for (Map.Entry<Class<? extends AudioEvent>, Set<EventListenerData>> entry : listeners.entrySet()) {
+            for (Method method : declaredMethods) {
+                for (Method method2 : adaptersMethods) {
+                    if (method.getName().equals(method2.getName()) && method.getParameters()[0] == method2.getParameters()[0]) {
+                        Set<EventListenerData> toRemove = new HashSet<>();
+                        for (EventListenerData data : entry.getValue()) {
+                            if (data.method == method) {
+                                toRemove.add(data);
+                            }
+                        }
+                        entry.getValue().removeAll(toRemove);
+                    }
+                }
+            }
+        }
+    }
+
     // works asynchronously
     public static void pushEvent(Object eventObject) {
         if (eventObject == null) throw new IllegalArgumentException("The event cannot be null.");
