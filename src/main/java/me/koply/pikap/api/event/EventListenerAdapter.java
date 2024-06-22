@@ -9,5 +9,6 @@ public abstract class EventListenerAdapter {
     public void onPlaylist(PlaylistEvent e) { }
     public void onPause(PauseEvent e) { }
     public void onResume(ResumeEvent e) { }
+    public void onReplay(ReplayEvent e) { }
 
 }
