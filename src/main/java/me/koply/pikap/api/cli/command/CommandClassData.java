@@ -15,13 +15,14 @@ public class CommandClassData {
     public final CLICommand instance;
     public final Map<String, MethodAndAnnotation> methods;
 
-    // struct :(
     public static class MethodAndAnnotation {
         public final Method method;
+        public final ReturnType returnType;
         public final Command annotation;
 
-        public MethodAndAnnotation(Method method, Command annotation) {
+        public MethodAndAnnotation(Method method, ReturnType returnType, Command annotation) {
             this.method = method;
+            this.returnType = returnType;
             this.annotation = annotation;
         }
     }

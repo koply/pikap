@@ -34,6 +34,10 @@ public class PipelineController implements Runnable {
         isPause = true;
     }
 
+    public boolean isPaused() {
+        return isPause;
+    }
+
     private AudioInputStream stream;
     private SourceDataLine line;
 
@@ -47,14 +51,15 @@ public class PipelineController implements Runnable {
             if (!workerThread.isInterrupted() && workerThread.isAlive()) workerThread.interrupt();
             workerThread = null;
         } catch (InterruptedIOException ignored) {
-            Console.log("InterruptedIO at pipeline.");
+            Console.debugLog("InterruptedIO at pipeline. Ignored.");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Console.debugLog("IOException at pipeline. Ignored.");
         }
     }
 
     public void resumeOutputLine() {
         isPause = false;
+        workerThread.interrupt();
         workerThread = null;
         workerThread = new Thread(this);
         workerThread.start();
@@ -102,11 +107,10 @@ public class PipelineController implements Runnable {
                 if (isPause) break;
             }
         } catch (InterruptedIOException ignored) {
-            Console.log("InterruptedIO at pipeline.");
+            Console.debugLog("InterruptedIO at pipeline.");
         } catch (IOException ex) {
             if (Main.CONFIG.isDebug()) {
                 Console.println("[DEBUG] Exception stacktrace:");
-                ex.printStackTrace();
             } else {
                 Console.println("[E] -> AudioOutput stream.");
             }

@@ -11,4 +11,6 @@ public @interface Command {
     String[] usages();
     String desc() default "";
     String category() default "";
+    String usageMsg() default "";
+    boolean sendWithDesc() default false;
 }

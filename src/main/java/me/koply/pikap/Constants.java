@@ -29,6 +29,8 @@ public class Constants {
 
     public static final String YT_URL_PREFIX = "https://www.youtube.com/watch?v=";
 
+    public static final String YT_PLIST_URL_PREFIX = "https://www.youtube.com/playlist?list=";
+
     // SUM
     public static final byte[] PTF_HEADER_PREFIX = new byte[] { 0x53, 0x55, 0x4D };
 

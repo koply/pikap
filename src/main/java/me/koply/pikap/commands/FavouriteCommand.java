@@ -19,6 +19,10 @@ public class FavouriteCommand implements CLICommand {
 
     @Command(usages = {"fav", "favourite"}, desc = "Adds the current song to favourites.")
     public void fav(CommandEvent e) {
+        if (Main.getRepository() == null) {
+            Console.println("Database is not found. You can enable database from config.yml");
+            return;
+        }
         AudioTrack track = SOUND_MANAGER.getPlayingTrack();
         if (track == null) {
             println("Doesn't playing anything to fav.");
@@ -37,6 +41,10 @@ public class FavouriteCommand implements CLICommand {
 
     @Command(usages = {"favs", "favourites"}, desc = "Lists the favourite songs.")
     public void favs(CommandEvent e) {
+        if (Main.getRepository() == null) {
+            Console.println("Database is not found. You can enable database from config.yml");
+            return;
+        }
         List<FavouriteTrack> favs = Main.getRepository().queryAllFavorites();
         StringBuilder sb = new StringBuilder();
         int i = 1;

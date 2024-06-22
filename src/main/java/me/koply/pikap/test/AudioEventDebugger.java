@@ -7,31 +7,31 @@ public class AudioEventDebugger extends EventListenerAdapter {
 
     @Override
     public void onPlay(PlayEvent e) {
-        Console.log("AudioEventDebugger#onPlayEvent");
+        Console.debugLog("AudioEventDebugger#onPlayEvent");
     }
 
     @Override
     public void onTrackEnd(TrackEndEvent e) {
-        Console.log("AudioEventDebugger#onTrackEnd");
+        Console.debugLog("AudioEventDebugger#onTrackEnd");
     }
 
     @Override
     public void onNextTrack(NextTrackEvent e) {
-        Console.log("AudioEventDebugger#onNextTrack");
+        Console.debugLog("AudioEventDebugger#onNextTrack");
     }
 
     @Override
     public void onPlaylist(PlaylistEvent e) {
-        Console.log("AudioEventDebugger#onPlaylist");
+        Console.debugLog("AudioEventDebugger#onPlaylist");
     }
 
     @Override
     public void onPause(PauseEvent e) {
-        Console.log("AudioEventDebugger#onPause");
+        Console.debugLog("AudioEventDebugger#onPause");
     }
 
     @Override
     public void onResume(ResumeEvent e) {
-        Console.log("AudioEventDebugger#onResume");
+        Console.debugLog("AudioEventDebugger#onResume");
     }
 }

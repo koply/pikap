@@ -51,7 +51,12 @@ public class CommandHandler {
 
     private void callCommandMethod(CommandEvent event, CommandClassData ccd) {
         try {
-            ccd.methods.get(event.getArgs()[0]).method.invoke(ccd.instance, event);
+            CommandClassData.MethodAndAnnotation maa = ccd.methods.get(event.getArgs()[0]);
+            Object result = maa.method.invoke(ccd.instance, event);
+            if (maa.returnType == ReturnType.BOOLEAN && (boolean) result) {
+                Console.prefixln(maa.annotation.usageMsg());
+                if (maa.annotation.sendWithDesc()) Console.println(maa.annotation.desc());
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

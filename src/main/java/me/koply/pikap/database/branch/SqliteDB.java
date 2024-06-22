@@ -31,7 +31,7 @@ public class SqliteDB implements Database {
         String dataFilePath = config.getOrDefault("dbFile", "data_" + Util.getDateForFileName() + ".db");
 
         if (!config.containsKey("dbfile")) {
-            Console.log("The dbfile entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
+            Console.debugLog("The dbfile entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
         }
 
         String connectionUrl = "jdbc:sqlite:" + dataFilePath;
@@ -40,10 +40,10 @@ public class SqliteDB implements Database {
             connectionSource = new JdbcConnectionSource(connectionUrl, new SqliteDatabaseType());
             initializeDaos(connectionSource);
 
-            Console.log("Database connection established");
+            Console.debugLog("Database connection established");
             return true;
         } catch (SQLException ex) {
-            Console.log("An error occur while connection to the database.");
+            Console.debugLog("An error occur while connection to the database.");
             ex.printStackTrace();
             return false;
         }
@@ -186,6 +186,15 @@ public class SqliteDB implements Database {
     public void updatePlaylist(Playlist playlist) {
         try {
             playlists.update(playlist);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Playlist> queryAllPlaylists() {
+        try {
+            return playlists.queryForAll();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

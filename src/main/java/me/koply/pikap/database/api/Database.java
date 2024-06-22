@@ -26,6 +26,7 @@ public interface Database {
 
     void createPlaylist(Playlist playlist);
     void updatePlaylist(Playlist playlist);
+    List<Playlist> queryAllPlaylists();
     Playlist queryPlaylistById(int id);
     Playlist queryPlaylistByIdentifier(String identifier);
 

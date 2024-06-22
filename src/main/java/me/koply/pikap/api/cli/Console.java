@@ -89,7 +89,7 @@ public class Console {
         logger.warning(str);
     }
 
-    public static void log(String str) {
+    public static void debugLog(String str) {
         if (Main.CONFIG.isDebug()) {
             System.out.println(Chalk.on("[LOG] ").blue().toString() + Chalk.on(str).yellow().toString());
         }

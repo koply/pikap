@@ -13,5 +13,26 @@ public class PlayQueryData {
         this.playNow = playNow;
         this.isMusic = music;
         this.creationTime = System.currentTimeMillis();
+        this.fromPl = false;
+        this.plName = null;
+    }
+
+    private boolean fromPl;
+    private String plName;
+
+    public boolean isFromPl() {
+        return fromPl;
+    }
+
+    public void setFromPl(boolean fromPl) {
+        this.fromPl = fromPl;
+    }
+
+    public String getPlName() {
+        return plName;
+    }
+
+    public void setPlName(String plName) {
+        this.plName = plName;
     }
 }

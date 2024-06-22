@@ -78,13 +78,14 @@ public class CommandInitializer {
         Method[] methods = clazz.getDeclaredMethods();
 
         for (Method method : methods) {
-            if (!method.getReturnType().equals(Void.TYPE)) continue;
+            ReturnType returnType = ReturnType.getFromType(method.getReturnType());
+            if (returnType == ReturnType.UNKNOWN) continue;
             Command annotation = method.getDeclaredAnnotation(Command.class);
             if (annotation == null) continue;
             Class<?>[] types = method.getParameterTypes();
             if (types.length == 1 && types[0] == CommandEvent.class) {
-                /* void command(CommandEvent e); */
-                CommandClassData.MethodAndAnnotation maa = new CommandClassData.MethodAndAnnotation(method, annotation);
+                /* void/boolean command(CommandEvent e); */
+                CommandClassData.MethodAndAnnotation maa = new CommandClassData.MethodAndAnnotation(method, returnType, annotation);
                 for (String usage : annotation.usages()) {
                     commandMethodsWithAliases.put(usage, maa);
                 }

@@ -17,8 +17,6 @@ import me.koply.pikap.session.SessionData;
 import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.sound.recorder.RecordedTracksManager;
 import me.koply.pikap.test.AudioEventDebugger;
-import me.koply.pikap.util.FileUtil;
-import me.koply.pikap.util.Util;
 
 public class Main {
 
@@ -51,7 +49,7 @@ public class Main {
 
         Databases selectedDatabase = Databases.fromName(CONFIG.getOrDefault("db", ""));
         if (selectedDatabase == null) {
-            Console.log("Database not selected.");
+            Console.debugLog("Database not selected.");
         } else {
             repository = DBFactory.create(selectedDatabase);
             boolean success = repository.connect(CONFIG);

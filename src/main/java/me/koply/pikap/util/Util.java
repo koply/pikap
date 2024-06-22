@@ -97,6 +97,17 @@ public final class Util {
         }
     }
 
+    public static boolean readBoolean() {
+        while (true) {
+            Console.print("(Y / N) > ");
+            String entry = Console.SC.nextLine();
+            boolean yes = StringUtil.anyEqualsIgnoreCase(entry, "e", "y", "yes", "on", "accept", "true", "ok", "evet");
+            boolean no = StringUtil.anyEqualsIgnoreCase(entry, "h", "n", "no", "off", "deny", "false", "yay", "hayir");
+            if (yes) return true;
+            else if (no) return false;
+        }
+    }
+
     public static String getTrackFileName() {
         // PTF -> Pikap Track File
         return "track_" + getDateForFileName() + ".ptf";

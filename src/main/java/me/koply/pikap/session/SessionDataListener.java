@@ -19,6 +19,24 @@ public class SessionDataListener extends EventListenerAdapter {
     }
 
     @Override
+    public void onPause(PauseEvent e) {
+        if (store.getCurrentState() == State.PLAYING_TRACK) {
+            store.setCurrentState(State.PAUSED_TRACK);
+        } else if (store.getCurrentState() == State.PLAYING_PLAYLIST) {
+            store.setCurrentState(State.PAUSED_PLAYLIST);
+        }
+    }
+
+    @Override
+    public void onResume(ResumeEvent e) {
+        if (store.getCurrentState() == State.PAUSED_TRACK) {
+            store.setCurrentState(State.PLAYING_TRACK);
+        } else if (store.getCurrentState() == State.PAUSED_PLAYLIST) {
+            store.setCurrentState(State.PLAYING_PLAYLIST);
+        }
+    }
+
+    @Override
     public void onTrackEnd(TrackEndEvent e) {
         store.addTrack(e.endTrack);
         store.setCurrentState(State.IDLE);

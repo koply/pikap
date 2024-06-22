@@ -22,18 +22,19 @@ public class PikapEventListener extends EventListenerAdapter {
 
     @Override
     public void onPlay(PlayEvent e) {
-        saveNewTrack(e.track, true);
+        saveNewTrack(e.track, true, null);
     }
 
     @Override
     public void onPlaylist(PlaylistEvent e) {
         if (e.firstTrackStarted) {
-            saveNewTrack(e.playlist.getTracks().get(0), true);
+            saveNewTrack(e.playlist.getTracks().get(0), true, null);
         }
 
         // https://www.youtube.com/watch?v=bzrSweHAbIk&list=PLqjIyifcLPWGrMsrjTPvX0oBYPAXpPoMV
         String order = SoundManager.getOrder();
         if (order == null) return;
+
 
         String[] first = order.split("\\?");
         String[] parameters = first[1].split("&");
@@ -46,7 +47,7 @@ public class PikapEventListener extends EventListenerAdapter {
             }
         }
         if (identifier.isEmpty()) {
-            Console.log("Identifier is empty. Should be investigate...");
+            Console.debugLog("Identifier is empty. Should be investigate...");
             return;
         }
 
@@ -57,17 +58,20 @@ public class PikapEventListener extends EventListenerAdapter {
             // order because playlists can only be played with order
             playlist = new Playlist(audioPlaylist, identifier, e.duration);
             playlist.setCreatedAt(Timestamp.from(Instant.now()));
+            db.createPlaylist(playlist);
         }
+        String foundIds = playlist.getTrackIdsString() != null && !playlist.getTrackIdsString().isEmpty() ? playlist.getTrackIdsString() : "";
 
-        StringBuilder trackIds = new StringBuilder();
+        StringBuilder trackIds = new StringBuilder(foundIds);
         Track firstTrack = null;
         for (AudioTrack track : audioPlaylist.getTracks()) {
-            Track savedTrack = saveNewTrack(track, false);
+            Track savedTrack = saveNewTrack(track, false, playlist.getId());
             if (firstTrack == null) firstTrack = savedTrack;
             trackIds.append(savedTrack.getId()).append(",");
         }
         playlist.setTrackIds(trackIds.toString());
-        db.createPlaylist(playlist);
+        db.updatePlaylist(playlist);
+
 
         PlayedPlaylist playedPlaylist = new PlayedPlaylist(playlist, firstTrack);
         playedPlaylist.setPlayedAt(playlist.getCreatedAt());
@@ -77,12 +81,12 @@ public class PikapEventListener extends EventListenerAdapter {
 
     @Override
     public void onNextTrack(NextTrackEvent e) {
-        if (e.reason == NextTrackEvent.Reason.NEXT) {
+        if (e.reason == NextTrackEvent.Reason.NEXT && e.pastTrack != null) {
             Track pastTrack = db.queryTrackByIdentifier(e.pastTrack.getIdentifier());
             pastTrack.setLastMillis(e.pastTrack.getPosition());
             db.updateTrack(pastTrack);
         }
-        saveNewTrack(e.nextTrack, true);
+        saveNewTrack(e.nextTrack, true, null);
     }
 
     @Override
@@ -101,12 +105,16 @@ public class PikapEventListener extends EventListenerAdapter {
         db.updateTrack(track);
     }
 
-    private Track saveNewTrack(AudioTrack audioTrack, boolean isPlayed) {
+    private Track saveNewTrack(AudioTrack audioTrack, boolean isPlayed, Integer playlistId) {
         Track track = db.queryTrackByIdentifier(audioTrack.getIdentifier());
         boolean create = false;
         if (track == null) {
             track = new Track(audioTrack.getInfo());
             create = true;
+        }
+
+        if (playlistId != null) {
+            track.addPlaylistId(playlistId);
         }
 
         if (isPlayed) {

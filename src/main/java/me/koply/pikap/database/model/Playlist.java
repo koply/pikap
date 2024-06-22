@@ -35,6 +35,9 @@ public class Playlist {
     }
 
     public int[] getTrackIds() {
+        if (trackIds == null) {
+            return new int[] {};
+        }
         String[] ids = trackIds.split(",");
         int[] trackIds = new int[ids.length];
         for (int i = 0; i < ids.length; i++) {

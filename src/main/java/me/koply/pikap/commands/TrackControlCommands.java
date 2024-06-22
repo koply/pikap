@@ -8,10 +8,9 @@ import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.cli.command.OnlyInstance;
 import me.koply.pikap.sound.PlayQueryData;
-import me.koply.pikap.util.StringUtil;
-import me.koply.pikap.util.TrackBox;
-import me.koply.pikap.util.TrackUtil;
-import me.koply.pikap.util.Util;
+import me.koply.pikap.util.*;
+
+import java.util.Locale;
 
 import static me.koply.pikap.Main.SOUND_MANAGER;
 
@@ -24,19 +23,33 @@ public class TrackControlCommands implements CLICommand {
     }
 
     @Command(usages = {"play", "p", "pn", "pp", "pm", "search"},
-            desc = "You can play songs. 'pn' for play first result. 'pp' for play-playlist. 'pm' for YoutubeMusic search.")
-    public void play(CommandEvent e) {
+            desc = "You can play songs. 'pn' for play first result. 'pp' for play-playlist. 'pm' for YoutubeMusic search.",
+            usageMsg = "Usages: p/play/search <query> | pn <query | pp <playlist url>",
+            sendWithDesc = true)
+    public boolean play(CommandEvent e) {
         String order = e.getPureCommand().substring(e.getArgs()[0].length()).trim();
-        boolean now = e.getArgs()[0].endsWith("n");
-        boolean music = e.getArgs()[0].endsWith("m");
-        boolean playlist = e.getArgs()[0].length() == 2 && e.getArgs()[0].endsWith("p");
 
         if (order.isEmpty()) {
-            println("Please enter a query.");
-            return;
+            return true;
         }
+
+        boolean now = e.getArgs()[0].endsWith("n");
+        boolean music = e.getArgs()[0].endsWith("m");
+        boolean playlist = e.getArgs()[0].equalsIgnoreCase("pp");
         boolean isUrl = Util.isUrl(order);
-        SOUND_MANAGER.playTrack(new PlayQueryData(order, isUrl, playlist, now, music));
+
+        if (playlist && !(RegexUtil.isYoutubeMatch(order) && order.toLowerCase(Locale.ROOT).contains("list="))) {
+            Console.println("You didn't enter a valid YouTube link. Still make a search? All results will be added to the queue.");
+            boolean x = Util.readBoolean();
+            if (!x) {
+                Console.println("Aborted.");
+                return false;
+            }
+        }
+
+        PlayQueryData data = new PlayQueryData(order, isUrl, playlist, now, music);
+        data.setFromPl(false);
+        SOUND_MANAGER.playTrack(data);
 
         try {
             synchronized (instance) {
@@ -45,6 +58,7 @@ public class TrackControlCommands implements CLICommand {
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+        return false;
     }
 
     @Command(usages = "pause", desc = "Pause's the song.")

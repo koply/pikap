@@ -70,10 +70,15 @@ public class SoundManager {
 
     // -------------- PUBLIC API -----------------
     public void playTrack(PlayQueryData data) {
-        Console.info("Searching... \"" + data.order + "\"");
+        if (data.isFromPl()) {
+            Console.info("Retrieving playlist: \"" + data.getPlName() + "\"");
+        } else {
+            Console.info("Searching... \"" + data.order + "\"");
+        }
+
 
         QUEUE_SCHEDULER.setQueryData(data);
-        String order = data.isUrl ? data.order : (data.isMusic ? "ytmsearch:"+data.order : "ytsearch:"+data.order);
+        String order = data.isUrl || data.isFromPl() ? data.order : (data.isMusic ? "ytmsearch:"+data.order : "ytsearch:"+data.order);
         playerManager.loadItem(order, handler);
     }
 
