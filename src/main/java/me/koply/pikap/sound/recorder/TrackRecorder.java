@@ -18,7 +18,7 @@ public class TrackRecorder {
     public TrackRecorder(AudioTrackInfo info) {
         this.info = info;
 
-        String recFolder = Main.CONFIG.get("recfolder");
+        String recFolder = Main.CONFIG.get("recFolder");
         recFolder = recFolder.endsWith("/") ? recFolder : recFolder.concat("/");
         this.file = new File(recFolder + info.identifier);
     }
@@ -41,6 +41,7 @@ public class TrackRecorder {
         //ByteBuffer buffer = ByteBuffer.allocate();
     }
 
+    // TODO
     public void addArray(byte[] arr) {
         bytes.add(arr);
     }

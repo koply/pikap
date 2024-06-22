@@ -18,14 +18,14 @@ public class TrackBox {
         return boxify(width, buildFirstLine(width - 4, track), buildSecondLine(width - 4, track, isPaused, volume));
     }
 
-    private static final String TOP_LEFT_CORNER = "\u2554";
-    private static final String TOP_RIGHT_CORNER = "\u2557";
-    private static final String BOTTOM_LEFT_CORNER = "\u255a";
-    private static final String BOTTOM_RIGHT_CORNER = "\u255d";
-    private static final String BORDER_HORIZONTAL = "\u2550";
-    private static final String BORDER_VERTICAL = "\u2551";
-    private static final String PROGRESS_FILL = "\u25a0";
-    private static final String PROGRESS_EMPTY = "\u2015";
+    private static final String TOP_LEFT_CORNER = "╔";
+    private static final String TOP_RIGHT_CORNER = "╗";
+    private static final String BOTTOM_LEFT_CORNER = "╚";
+    private static final String BOTTOM_RIGHT_CORNER = "╝";
+    private static final String BORDER_HORIZONTAL = "═";
+    private static final String BORDER_VERTICAL = "║";
+    private static final String PROGRESS_FILL = "■";
+    private static final String PROGRESS_EMPTY = "―";
 
     private static String buildFirstLine(int width, AudioTrack track) {
         StringBuilder builder = new StringBuilder();
