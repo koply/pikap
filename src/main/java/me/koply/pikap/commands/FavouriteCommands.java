@@ -11,6 +11,7 @@ import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.database.model.FavouriteTrack;
 import me.koply.pikap.database.model.Track;
 import me.koply.pikap.sound.PlayQueryData;
+import me.koply.pikap.util.StringUtil;
 import me.koply.pikap.util.Util;
 
 import java.util.List;
@@ -109,21 +110,29 @@ public class FavouriteCommands implements CLICommand {
         }
 
         List<FavouriteTrack> favs = Main.getRepository().queryAllFavorites();
+        if (StringUtil.anyEqualsIgnoreCase(e.getArgs()[1], "all", "al")) {
+            Console.println("[EXPERIMENTAL] This feature is still in beta.");
+            for (FavouriteTrack fav : favs) {
+                _playFav(fav.getTrack());
+            }
+        } else {
+            Integer selection = Util.parseInt(e.getArgs()[1]);
+            if (selection == null || --selection < 0 || selection >= favs.size()) {
+                return true;
+            }
 
-        Integer selection = Util.parseInt(e.getArgs()[1]);
-        if (selection == null || --selection < 0 || selection >= favs.size()) {
-            return true;
+            FavouriteTrack favouriteTrack = favs.get(selection);
+            Track track = favouriteTrack.getTrack();
         }
+        return false;
+    }
 
-        FavouriteTrack favouriteTrack = favs.get(selection);
-        Track track = favouriteTrack.getTrack();
-
+    private void _playFav(Track track) {
         String url = Constants.YT_URL_PREFIX + track.getIdentifier();
         PlayQueryData data = new PlayQueryData(url, true, false, false, false);
         data.setFromPf(true);
         data.setKnownName(track.getTitle());
         SOUND_MANAGER.playTrack(data);
-        return false;
     }
 
 }
