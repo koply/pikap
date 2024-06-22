@@ -20,23 +20,34 @@ import me.koply.pikap.event.EventManager;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats.COMMON_PCM_S16_BE;
 
 public class SoundManager {
 
+    public SoundManager() {
+    }
+
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
     private static final AudioPlayer player = playerManager.createPlayer();
     private static final EqualizerFactory equalizerFactory = new EqualizerFactory();
     private static final PipelineController pipeline = new PipelineController(playerManager, player);
-    private static final TrackManager trackManager = new TrackManager(player, pipeline);
-    private static final SearchResultHandler handler = new SearchResultHandler(trackManager);
+    private static final AtomicBoolean replay = new AtomicBoolean(false);
+    private static final QueueScheduler QUEUE_SCHEDULER = new QueueScheduler(player, pipeline, replay);
+    private static final SearchResultHandler handler = new SearchResultHandler(QUEUE_SCHEDULER);
 
-    public static TrackManager getTrackManager() {
-        return trackManager;
+    public static QueueScheduler getQueueScheduler() {
+        return QUEUE_SCHEDULER;
     }
 
-    public SoundManager() {
+    public static String getOrder() {
+        PlayQueryData data = QUEUE_SCHEDULER.getQueryData();
+        return data == null ? null : data.order;
+    }
+
+    public BlockingQueue<AudioTrack> getQueue() {
+        return QUEUE_SCHEDULER.queue;
     }
 
     public void initialize() {
@@ -47,17 +58,9 @@ public class SoundManager {
 
         playerManager.getConfiguration().setOutputFormat(COMMON_PCM_S16_BE);
         playerManager.setPlayerCleanupThreshold(TimeUnit.HOURS.toMillis(24));
-        player.addListener(trackManager);
+        player.addListener(QUEUE_SCHEDULER);
         setVolume(75);
     }
-
-    public BlockingQueue<AudioTrack> getQueue() {
-        return trackManager.queue;
-    }
-
-    private static final float[] BASS_BOOST = { 0.2f, 0.15f, 0.1f, 0.05f, 0.0f,
-            -0.05f, -0.1f, -0.1f, -0.1f, -0.1f,
-            -0.1f, -0.1f, -0.1f, -0.1f, -0.1f };
 
     public static void shutdown() {
         playerManager.shutdown();
@@ -69,7 +72,7 @@ public class SoundManager {
     public void playTrack(PlayQueryData data) {
         Console.info("Searching... \"" + data.order + "\"");
 
-        handler.setQueryData(data);
+        QUEUE_SCHEDULER.setQueryData(data);
         String order = data.isUrl ? data.order : (data.isMusic ? "ytmsearch:"+data.order : "ytsearch:"+data.order);
         playerManager.loadItem(order, handler);
     }
@@ -79,7 +82,7 @@ public class SoundManager {
     }
 
     public void nextTrack(int count) {
-        trackManager.nextTrack(count);
+        QUEUE_SCHEDULER.nextTrack(count);
     }
 
     public void setVolume(int x) {
@@ -98,6 +101,10 @@ public class SoundManager {
         player.setFilterFactory(null);
     }
 
+    private static final float[] BASS_BOOST = { 0.2f, 0.15f, 0.1f, 0.05f, 0.0f,
+            -0.05f, -0.1f, -0.1f, -0.1f, -0.1f,
+            -0.1f, -0.1f, -0.1f, -0.1f, -0.1f };
+
     public void increaseBassBoost(float diff) {
         for (int i = 0; i < BASS_BOOST.length; i++) {
             equalizerFactory.setGain(i, BASS_BOOST[i] + diff);
@@ -115,31 +122,45 @@ public class SoundManager {
     }
 
     public void pause() {
-        player.setPaused(true);
-        pipeline.pauseOutputLine();
-        EventManager.pushEvent(
-                new PauseEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+        if (!player.isPaused() && player.getPlayingTrack() != null) {
+            player.setPaused(true);
+            pipeline.pauseOutputLine();
+            EventManager.pushEvent(
+                    new PauseEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
 
-        Console.info("Paused.");
+            Console.info("Paused.");
+        }
     }
 
     public void resume() {
-        player.setPaused(false);
-        pipeline.resumeOutputLine();
-        EventManager.pushEvent(
-                new ResumeEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+        if (player.isPaused()) {
+            player.setPaused(false);
+            pipeline.resumeOutputLine();
+            EventManager.pushEvent(
+                    new ResumeEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
 
-        Console.info("Resumed.");
+            Console.info("Resumed.");
+        }
+    }
+
+    public boolean getReplay() {
+        return replay.get();
+    }
+
+    public void setReplay(boolean value) {
+        replay.set(value);
     }
 
     public void stop() {
         AudioTrack lastTrack = player.getPlayingTrack() != null ? player.getPlayingTrack().makeClone() : null;
         if (lastTrack != null) {
+            lastTrack.setPosition(player.getPlayingTrack().getPosition());
             EventManager.pushEvent(
                     new TrackEndEvent(Main.SOUND_MANAGER, lastTrack, AudioTrackEndReason.STOPPED));
         }
         player.stopTrack();
         pipeline.shutdownThread(); // be careful
+        player.setPaused(false);
 
         Console.info("Track stopped.");
     }

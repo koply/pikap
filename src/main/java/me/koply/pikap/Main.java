@@ -23,13 +23,14 @@ import me.koply.pikap.util.Util;
 public class Main {
 
     static {
-        // SysErrToSlf4J.redirectSysErr(LoggerFactory.getLogger("SysErr"));
+        /* todo make that log system
+        SysErrToSlf4J.redirectSysErr(LoggerFactory.getLogger("SysErr"));
         String logName = Util.getLogName();
         FileUtil.createDirectory(Constants.LOGS_FOLDER);
-        System.setProperty("org.slf4j.simpleLogger.logFile", "logs/" + logName);
+        System.setProperty("org.slf4j.simpleLogger.logFile", "logs/" + logName); */
     }
 
-    public static boolean resetConfig = false; // for development
+    public static final boolean resetConfig = false; // for development
     public static final ConfigManager CONFIG = new ConfigManager(Constants.CONFIG_FILE);
     public static final RecordedTracksManager RECORD_MANAGER = new RecordedTracksManager();
 

@@ -42,7 +42,7 @@ public class FavouriteCommand implements CLICommand {
         int i = 1;
         for (FavouriteTrack fav : favs) {
             sb.append(YELLOW.getStart()).append("[").append(i++).append("] ").append(YELLOW.getEnd());
-            sb.append(BLUE.getStart()).append(fav.getTrack().getTitle()).append(" - ").append(Util.formatMilliSecond(fav.getTrack().getLength()));
+            sb.append(BLUE.getStart()).append(fav.getTrack().getTitle()).append(" - ").append(Util.formatMilliSecond(fav.getTrack().getDuration()));
             sb.append(BLUE.getEnd()).append("\n");
         }
 

@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface Command {
     String[] usages();
     String desc() default "";
+    String category() default "";
 }

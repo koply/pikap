@@ -22,7 +22,7 @@ public class RecordedTracksManager {
             return;
         }
 
-        String recFolderPath = CONFIG.get("recfolder");
+        String recFolderPath = CONFIG.get("recFolder");
         if (recFolderPath == null) {
             Console.warn("Recfolder options is not correct.");
             return;
@@ -35,7 +35,7 @@ public class RecordedTracksManager {
 
         File[] files = folder.listFiles();
         if (files == null) {
-            Console.info("Cannot read the recfolder files.");
+            Console.info("Cannot read the recFolder files.");
             return;
         }
 

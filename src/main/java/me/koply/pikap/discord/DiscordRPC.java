@@ -34,14 +34,48 @@ public class DiscordRPC implements Runnable {
 
     }
 
-    public void loadAsync() {
-        Thread rpcThread = new Thread(this);
-        rpcThread.start();
-    }
-
     private Core core;
     public Core getCore() {
         return core;
+    }
+
+    private Thread rpcThread;
+    public void loadAsync() {
+        rpcThread = new Thread(this);
+        rpcThread.start();
+        EventManager.registerListener(listener);
+    }
+
+    public void close() {
+        try {
+            core.close();
+            rpcThread.interrupt();
+            rpcThread = null;
+            EventManager.registerListener(listener);
+        } catch (Exception ignored) {
+        }
+    }
+
+    // works sync
+    public boolean prepare() {
+        File libFile = getLibraryFile();
+        if (libFile == null) {
+            Console.prefixln("DiscordRPC cannot be initialized. Further details in log file.");
+            return false;
+        }
+
+        Core.init(libFile);
+
+        CreateParams params = new CreateParams();
+        params.setClientID(1150793311997657262L);
+        params.setFlags(CreateParams.Flags.NO_REQUIRE_DISCORD);
+
+        try {
+            core = new Core(params);
+            return true;
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     private Activity activity;
@@ -66,29 +100,6 @@ public class DiscordRPC implements Runnable {
         act.assets().setLargeText("Pikap");
 
         return act;
-    }
-
-    // works sync
-    public boolean prepare() {
-        File libFile = getLibraryFile();
-        if (libFile == null) {
-            Console.prefixln("DiscordRPC cannot be initialized. Further details in log file.");
-            return false;
-        }
-
-        Core.init(libFile);
-
-        CreateParams params = new CreateParams();
-        params.setClientID(1150793311997657262L);
-        params.setFlags(CreateParams.Flags.NO_REQUIRE_DISCORD);
-
-        try {
-            core = new Core(params);
-            EventManager.registerListener(listener);
-            return true;
-        } catch (Exception ignored) {
-            return false;
-        }
     }
 
     @Override
@@ -137,12 +148,12 @@ public class DiscordRPC implements Runnable {
                 return result.file;
             } else {
                 log.warn("Discord's GameSDK cannot be downloaded.");
-                log.warn("Cause: " + result.getMessage());
+                log.warn("Cause: {}", result.getMessage());
                 return null;
             }
         } catch (IOException | URISyntaxException e) {
             log.warn("Discord's GameSDK cannot be downloaded.");
-            log.warn("Cause: " + e.getMessage());
+            log.warn("Cause: {}", e.getMessage());
             e.printStackTrace();
 
             return null;

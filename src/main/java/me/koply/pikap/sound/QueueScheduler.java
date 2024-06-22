@@ -3,12 +3,14 @@ package me.koply.pikap.sound;
 import com.github.tomaslanger.chalk.Chalk;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.NextTrackEvent;
 import me.koply.pikap.api.event.PlayEvent;
+import me.koply.pikap.api.event.ReplayEvent;
 import me.koply.pikap.api.event.TrackEndEvent;
 import me.koply.pikap.event.EventManager;
 import me.koply.pikap.util.StringUtil;
@@ -16,17 +18,31 @@ import me.koply.pikap.util.TrackUtil;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TrackManager extends AudioEventAdapter {
+public class QueueScheduler extends AudioEventAdapter {
 
     private final AudioPlayer player;
     private final PipelineController pipeline;
     public final BlockingQueue<AudioTrack> queue;
+    private final AtomicBoolean replay;
 
-    public TrackManager(AudioPlayer player, PipelineController pipeline) {
+    // TODO: Use PikapQueue insted of BlockingQueue
+    // TODO: Remember playlist queues.
+
+    private PlayQueryData queryData = null;
+    public void setQueryData(PlayQueryData queryData) {
+        this.queryData = queryData;
+    }
+    public PlayQueryData getQueryData() {
+        return queryData;
+    }
+
+    public QueueScheduler(AudioPlayer player, PipelineController pipeline, AtomicBoolean replay) {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
         this.pipeline = pipeline;
+        this.replay = replay;
     }
 
     /**
@@ -34,6 +50,19 @@ public class TrackManager extends AudioEventAdapter {
      */
     public void addQueue(AudioTrack track) {
         queue.offer(track);
+    }
+
+    /**
+     * @param playlist to add queue
+     * @return total duration of the playlist
+     */
+    public long addQueuePlaylist(AudioPlaylist playlist) {
+        long duration = 0;
+        for (int i = 1; i<playlist.getTracks().size(); i++) {
+            queue.offer(playlist.getTracks().get(i));
+            duration += playlist.getTracks().get(i).getInfo().length;
+        }
+        return duration;
     }
 
     /**
@@ -94,7 +123,7 @@ public class TrackManager extends AudioEventAdapter {
         player.startTrack(poll, false);
 
         String suffix = number != skipped ? Chalk.on("(" + number +")").red().toString() : "";
-        Console.prln(Chalk.on("[ " + skipped + " -→ ] ").green().toString() + suffix);
+        Console.prln(Chalk.on("[ Next: " + skipped + " -→ ] ").green().toString() + suffix);
         Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
 
         EventManager.pushEvent(
@@ -111,6 +140,14 @@ public class TrackManager extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (!endReason.mayStartNext) {
+            return;
+        }
+
+        if (replay.get()) {
+            AudioTrack replayTrack = track.makeClone();
+            EventManager.pushEvent(new ReplayEvent(Main.SOUND_MANAGER, replayTrack));
+            Console.prln(Chalk.on("[ Replay: On ]").green().toString());
+            Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
             return;
         }
 

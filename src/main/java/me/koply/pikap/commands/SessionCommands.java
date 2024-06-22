@@ -9,7 +9,7 @@ import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.util.TrackUtil;
 
-import java.util.List;
+import java.util.Stack;
 
 import static me.koply.pikap.Main.SESSION;
 
@@ -28,13 +28,12 @@ public class SessionCommands implements CLICommand {
         }
         sb.append(Ansi.Color.BLUE.getEnd()).append("\n");
 
-        List<AudioTrack> tracks = SESSION.getPreviousTracks();
-
-        for (int i = 0; i<tracks.size(); i++) {
+        Stack<AudioTrack> tracks = SESSION.getPreviousTracks();
+        for (int i = tracks.size()-1; i >= 0; i--) {
             if (tracks.get(i) == null) continue;
             if (tracks.get(i).getInfo() == null) continue;
 
-            sb.append(Ansi.Color.YELLOW.getStart()).append("[").append(i+1).append("] ").append(Ansi.Color.YELLOW.getEnd())
+            sb.append(Ansi.Color.YELLOW.getStart()).append("[").append(tracks.size()-i).append("] ").append(Ansi.Color.YELLOW.getEnd())
                     .append(Ansi.Color.BLUE.getStart())
                     .append(TrackUtil.trackToString(tracks.get(i))).append(Ansi.Color.BLUE.getEnd()).append("\n");
         }

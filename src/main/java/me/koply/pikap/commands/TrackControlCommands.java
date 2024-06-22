@@ -8,6 +8,7 @@ import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.cli.command.OnlyInstance;
 import me.koply.pikap.sound.PlayQueryData;
+import me.koply.pikap.util.StringUtil;
 import me.koply.pikap.util.TrackBox;
 import me.koply.pikap.util.TrackUtil;
 import me.koply.pikap.util.Util;
@@ -22,7 +23,7 @@ public class TrackControlCommands implements CLICommand {
         return instance != null ? instance : (instance = new TrackControlCommands());
     }
 
-    @Command(usages = {"play", "p", "pn", "pp", "search"},
+    @Command(usages = {"play", "p", "pn", "pp", "pm", "search"},
             desc = "You can play songs. 'pn' for play first result. 'pp' for play-playlist. 'pm' for YoutubeMusic search.")
     public void play(CommandEvent e) {
         String order = e.getPureCommand().substring(e.getArgs()[0].length()).trim();
@@ -61,6 +62,19 @@ public class TrackControlCommands implements CLICommand {
         SOUND_MANAGER.stop();
     }
 
+    @Command(usages = {"replay", "r"}, desc = "Replay mode.")
+    public void replay(CommandEvent e) {
+        if (e.getArgs().length == 1) {
+            SOUND_MANAGER.setReplay(!SOUND_MANAGER.getReplay());
+        } else if (StringUtil.anyEqualsIgnoreCase(e.getArgs()[1], "on", "active")) {
+            SOUND_MANAGER.setReplay(true);
+        } else if (StringUtil.anyEqualsIgnoreCase(e.getArgs()[1], "off", "deactive")) {
+            SOUND_MANAGER.setReplay(false);
+        }
+
+        Console.info("Replay mode: " + SOUND_MANAGER.getReplay());
+    }
+
     @Command(usages = {"next", "skip", "n"}, desc = "Switches to next track. You can enter number.")
     public void next(CommandEvent e) {
         int number = 1;
@@ -76,6 +90,7 @@ public class TrackControlCommands implements CLICommand {
     public void volume(CommandEvent e) {
         if (e.getArgs().length < 2) {
            println("Current volume: " + SOUND_MANAGER.getVolume());
+           return;
         }
         Integer volume = Util.parseInt(e.getArgs()[1]);
         if (volume == null) {
@@ -94,6 +109,7 @@ public class TrackControlCommands implements CLICommand {
             return;
         }
         Console.prln(TrackBox.build(SOUND_MANAGER));
+        Console.println("[ Replay: " + SOUND_MANAGER.getReplay() + " - Remaining Queue: " + SOUND_MANAGER.getQueue().size() + " ]");
 
         if (e.getArgs().length > 1) {
             Console.prln(TrackUtil.trackToStringDetailed(SOUND_MANAGER.getPlayingTrack().getInfo()));
@@ -102,40 +118,41 @@ public class TrackControlCommands implements CLICommand {
 
     @Command(usages = "seek", desc = "Seeks the playing track with given seconds.")
     public void seek(CommandEvent e) {
+        if (e.getArgs().length == 1) {
+            Console.prefixln("Example usage: " + Chalk.on("seek 15").green() + Chalk.on(" (If you enter a negative number, it'll seek backwards.)").yellow());
+            return;
+        }
+
         AudioTrack track = SOUND_MANAGER.getPlayingTrack();
         if (track == null) {
             Console.println("Nothing is playing right now.");
             return;
         }
 
-        if (e.getArgs().length != 1) {
-            String valueStr = e.getArgs()[1];
-            boolean reverse = valueStr.startsWith("-");
-            Integer value = reverse ? Util.parseInt(valueStr.substring(1)) : Util.parseInt(valueStr);
-            if (value == null) {
-                Console.println("Example usage: " + Chalk.on("seek 15").green() + " (If you enter a negative number, it'll seek backwards.)");
-                return;
-            }
-
-            long seekValue = value * 1000;
-            long position = track.getPosition();
-            long seekableZone = reverse ? position : track.getDuration() - position;
-
-            if (seekValue < seekableZone) {
-                long newPosition = reverse ? position - seekValue : position + seekValue;
-                track.setPosition(newPosition);
-                Console.prln(TrackBox.build(SOUND_MANAGER));
-            } else {
-                Console.println("The entered number is greater than track duration.");
-            }
+        String valueStr = e.getArgs()[1];
+        boolean reverse = valueStr.startsWith("-");
+        Integer value = reverse ? Util.parseInt(valueStr.substring(1)) : Util.parseInt(valueStr);
+        if (value == null) {
+            Console.println("Example usage: " + Chalk.on("seek 15").green() + " (If you enter a negative number, it'll seek backwards.)");
             return;
         }
-        Console.prefixln("Example usage: " + Chalk.on("seek 15").green() + Chalk.on(" (If you enter a negative number, it'll seek backwards.)").yellow());
+
+        long seekValue = value * 1000;
+        long position = track.getPosition();
+        long seekableZone = reverse ? position : track.getDuration() - position;
+
+        if (seekValue < seekableZone) {
+            long newPosition = reverse ? position - seekValue : position + seekValue;
+            track.setPosition(newPosition);
+            Console.prln(TrackBox.build(SOUND_MANAGER));
+        } else {
+            Console.println("The entered number is greater than track duration.");
+        }
+
     }
 
     @Command(usages = "eq", desc = "Equalizer configuration.")
     public void eq(CommandEvent e) {
-        SOUND_MANAGER.activeEqualizer();
         // 0 1     2 3
         // eq bass + 1
         if (e.getArgs().length <= 3) {
@@ -152,6 +169,7 @@ public class TrackControlCommands implements CLICommand {
                 SOUND_MANAGER.decreaseBassBoost(diff);
             }
         }
+        SOUND_MANAGER.activeEqualizer();
     }
 
 }

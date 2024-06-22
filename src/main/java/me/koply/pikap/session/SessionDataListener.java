@@ -27,7 +27,7 @@ public class SessionDataListener extends EventListenerAdapter {
 
     @Override
     public void onNextTrack(NextTrackEvent e) {
-        store.addTrack(e.pastTrack);
+        if (e.pastTrack != null) store.addTrack(e.pastTrack);
         store.getPlayingNow().setPlayingTrack(e.nextTrack);
         store.setCurrentState(State.PLAYING_TRACK);
     }
@@ -36,5 +36,6 @@ public class SessionDataListener extends EventListenerAdapter {
     public void onPlaylist(PlaylistEvent e) {
         store.getPlayingNow().setPlayingTrack(e.playlist.getTracks().get(0));
         store.getPlayingNow().setPlayingPlaylist(e.playlist);
+        store.setCurrentState(State.PLAYING_PLAYLIST);
     }
 }

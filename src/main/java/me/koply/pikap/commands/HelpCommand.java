@@ -32,6 +32,7 @@ public class HelpCommand implements CLICommand {
         return helpMessage;
     }
 
+    // TODO: Categorise all commands
     @Command(usages = {"help", "commands"}, desc = "This command.")
     public void som(CommandEvent e) {
         Console.println(getHelpMessage());

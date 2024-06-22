@@ -21,19 +21,14 @@ public class SearchResultHandler implements AudioLoadResultHandler {
     private static final Ansi.Color YELLOW = Ansi.Color.YELLOW;
     private static final Ansi.Color BLUE = Ansi.Color.BLUE;
 
-    private final TrackManager scheduler;
-    public SearchResultHandler(TrackManager scheduler) {
+    private final QueueScheduler scheduler;
+    public SearchResultHandler(QueueScheduler scheduler) {
         this.scheduler = scheduler;
-    }
-
-    private PlayQueryData queryData = null;
-    public void setQueryData(PlayQueryData queryData) {
-        this.queryData = queryData;
     }
 
     @Override
     public void trackLoaded(AudioTrack audioTrack) {
-        if (queryData.isUrl) {
+        if (scheduler.getQueryData().isUrl) {
             scheduler.play(audioTrack, PlayEvent.Reason.URL);
         } else {
             Console.info("TrackLoaded: " + audioTrack.getInfo().title);
@@ -45,22 +40,16 @@ public class SearchResultHandler implements AudioLoadResultHandler {
     @Override
     public void playlistLoaded(AudioPlaylist audioPlaylist) {
         List<AudioTrack> playlist = audioPlaylist.getTracks();
-        long duration = 0;
-
-        if (queryData.isPlaylist) { // pp command
-
+        if (scheduler.getQueryData().isPlaylist) { // pp command
             // eventless because playlists have own event
             boolean started = scheduler.eventlessPlay(playlist.get(0));
-            duration += playlist.get(0).getInfo().length;
+            long duration = playlist.get(0).getInfo().length;
+            duration += scheduler.addQueuePlaylist(audioPlaylist);
 
-            for (int i = 1; i<playlist.size(); i++) {
-                scheduler.addQueue(playlist.get(i));
-                duration += playlist.get(i).getInfo().length;
-            }
             Console.prefixln("The playlist queued with " + playlist.size() + " tracks. Total time: " + Util.formatMilliSecond(duration));
             EventManager.pushEvent(new PlaylistEvent(Main.SOUND_MANAGER, audioPlaylist, duration, started));
 
-        } else if (queryData.playNow) { // pn command
+        } else if (scheduler.getQueryData().playNow) { // pn command
             scheduler.play(playlist.get(0), PlayEvent.Reason.PLAY_NOW);
 
         } else { // play, p, search command
@@ -92,7 +81,7 @@ public class SearchResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-        Console.info("No results about '" + queryData.order + "'");
+        Console.info("No results about '" + scheduler.getQueryData().order + "'");
 
         notifyCommandHandler();
     }

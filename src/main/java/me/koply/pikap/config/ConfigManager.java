@@ -42,9 +42,12 @@ public class ConfigManager extends LightYML {
             debug = debugValue.equalsIgnoreCase("true");
         }
 
-        String str = getOrDefault("searchlimitor", null);
-        Integer parsed = Util.parseInt(str);
-        searchLimitor = parsed == null ? -1 : parsed;
+        String str = getOrDefault("searchLimitor", null);
+        Integer searchLimitorInt = Util.parseInt(str);
+        searchLimitor = searchLimitorInt == null ? -1 : searchLimitorInt;
+
+        Integer queuePagerInt = Util.parseInt(getOrDefault("queuePager", null));
+        queuePager = queuePagerInt == null ? -1 : queuePagerInt;
     }
 
     private boolean debug = true;
@@ -55,6 +58,11 @@ public class ConfigManager extends LightYML {
     private int searchLimitor = -1;
     public int getSearchLimitor() {
         return searchLimitor;
+    }
+
+    private int queuePager;
+    public int getQueuePager() {
+        return queuePager;
     }
 
     public boolean recordCheck() {

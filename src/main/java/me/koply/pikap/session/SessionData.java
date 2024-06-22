@@ -20,9 +20,6 @@ public class SessionData {
     private State currentState = State.IDLE; // getter, setter
     public static final AtomicLong bufferCycles = new AtomicLong();
 
-    /**
-     * Last played 10 tracks.
-     */
     private final Stack<AudioTrack> previousTracks = new Stack<>();
 
     private Playing playingNow;
