@@ -8,9 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.database.api.Database;
-import me.koply.pikap.database.model.FavouriteTrack;
-import me.koply.pikap.database.model.Track;
-import me.koply.pikap.database.model.RecordedTrack;
+import me.koply.pikap.database.model.*;
 import me.koply.pikap.util.Util;
 
 import java.sql.SQLException;
@@ -25,9 +23,12 @@ public class SqliteDB implements Database {
     private Dao<FavouriteTrack, Integer> favouriteTracks;
     private Dao<RecordedTrack, Integer> recordedTracks;
 
+    private Dao<PlayedPlaylist, Integer> playedPlaylists;
+    private Dao<Playlist, Integer> playlists;
+
     @Override
     public boolean connect(Map<String, String> config) {
-        String dataFilePath = config.getOrDefault("dbfile", "data_" + Util.getDateForFileName() + ".db");
+        String dataFilePath = config.getOrDefault("dbFile", "data_" + Util.getDateForFileName() + ".db");
 
         if (!config.containsKey("dbfile")) {
             Console.log("The dbfile entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
@@ -52,6 +53,8 @@ public class SqliteDB implements Database {
         tracks = createDaoAndTableIfNotExists(connectionSource, Track.class);
         favouriteTracks = createDaoAndTableIfNotExists(connectionSource, FavouriteTrack.class);
         recordedTracks = createDaoAndTableIfNotExists(connectionSource, RecordedTrack.class);
+        playedPlaylists = createDaoAndTableIfNotExists(connectionSource, PlayedPlaylist.class);
+        playlists = createDaoAndTableIfNotExists(connectionSource, Playlist.class);
     }
 
     private <Z, Y> Dao<Z, Y> createDaoAndTableIfNotExists(ConnectionSource connectionSource, Class<Z> clazz) throws SQLException {
@@ -98,6 +101,15 @@ public class SqliteDB implements Database {
     }
 
     @Override
+    public void updateTrack(Track track) {
+        try {
+            tracks.update(track);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void deleteTrack(Track track) {
         try {
             tracks.delete(track);
@@ -134,12 +146,17 @@ public class SqliteDB implements Database {
     }
 
     @Override
-    public void createFavoriteIfNotExists(FavouriteTrack favouriteTrack) {
+    public List<Track> queryTracksByIds(int[] ids) {
         try {
-            favouriteTracks.createIfNotExists(favouriteTrack);
+            return tracks.queryBuilder().where().in("id", (Object) ids).query();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void createFavoriteIfNotExists(FavouriteTrack favouriteTrack) {
+        _createIfNotExists(favouriteTracks, favouriteTrack, "track", favouriteTrack.getTrack());
     }
 
     @Override
@@ -161,8 +178,69 @@ public class SqliteDB implements Database {
     }
 
     @Override
-    public void initializeListeners() {
+    public void createPlaylist(Playlist playlist) {
+        _createIfNotExists(playlists, playlist, "id", playlist.getId());
+    }
 
+    @Override
+    public void updatePlaylist(Playlist playlist) {
+        try {
+            playlists.update(playlist);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Playlist queryPlaylistById(int id) {
+        try {
+            return playlists.queryForId(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Playlist queryPlaylistByIdentifier(String identifier) {
+        try {
+            return playlists.queryBuilder().where().eq("youtubeIdentifier", identifier).queryForFirst();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createPlayedPlaylist(PlayedPlaylist playlist) {
+        _createIfNotExists(playedPlaylists, playlist, "playlist", playlist.getPlaylist());
+    }
+
+    @Override
+    public void updatePlayedPlaylist(PlayedPlaylist playlist) {
+        try {
+            playedPlaylists.update(playlist);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public PlayedPlaylist queryPlayedPlaylistById(int id) {
+        try {
+            return playedPlaylists.queryForId(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private <T, R> void _createIfNotExists(Dao<T,R> dao, T obj, String columnName, Object value) {
+        try {
+            T res = dao.queryBuilder().where().eq(columnName, value).queryForFirst();
+            if (res == null) {
+                dao.create(obj);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
