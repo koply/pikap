@@ -2,8 +2,10 @@ package me.koply.pikap.database.branch;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.db.SqliteDatabaseType;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import me.koply.pikap.api.cli.Console;
@@ -155,14 +157,29 @@ public class SqliteDB implements Database {
     }
 
     @Override
+    public Track queryLastPlayedTrack() {
+        // TODO
+        return null;
+    }
+
+    @Override
     public void createFavoriteIfNotExists(FavouriteTrack favouriteTrack) {
-        _createIfNotExists(favouriteTracks, favouriteTrack, "track", favouriteTrack.getTrack());
+        _createIfNotExists(favouriteTracks, favouriteTrack, "track_id", favouriteTrack.getTrack().getId());
     }
 
     @Override
     public void deleteFavorite(FavouriteTrack favouriteTrack) {
         try {
             favouriteTracks.delete(favouriteTrack);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public FavouriteTrack queryFavouriteByTrackId(int trackId) {
+        try {
+            return favouriteTracks.queryBuilder().where().eq("track_id", trackId).queryForFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -186,6 +203,24 @@ public class SqliteDB implements Database {
     public void updatePlaylist(Playlist playlist) {
         try {
             playlists.update(playlist);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deletePlaylist(int id) {
+        try {
+            playlists.deleteById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deletePlaylist(Playlist playlist) {
+        try {
+            playlists.delete(playlist);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -76,7 +76,6 @@ public class SoundManager {
             Console.info("Searching... \"" + data.order + "\"");
         }
 
-
         QUEUE_SCHEDULER.setQueryData(data);
         String order = data.isUrl || data.isFromPl() ? data.order : (data.isMusic ? "ytmsearch:"+data.order : "ytsearch:"+data.order);
         playerManager.loadItem(order, handler);

@@ -17,8 +17,16 @@ public class PlayQueryData {
         this.plName = null;
     }
 
+    // from playlist command
     private boolean fromPl;
+
+    // playlist name if its from playlist command
     private String plName;
+
+    // from playfav command
+    private boolean fromPf;
+
+
 
     public boolean isFromPl() {
         return fromPl;
@@ -26,6 +34,14 @@ public class PlayQueryData {
 
     public void setFromPl(boolean fromPl) {
         this.fromPl = fromPl;
+    }
+
+    public boolean isFromPf() {
+        return fromPf;
+    }
+
+    public void setFromPf(boolean fromPf) {
+        this.fromPf = fromPf;
     }
 
     public String getPlName() {

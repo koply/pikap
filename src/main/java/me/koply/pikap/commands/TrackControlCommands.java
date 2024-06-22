@@ -76,7 +76,7 @@ public class TrackControlCommands implements CLICommand {
         SOUND_MANAGER.stop();
     }
 
-    @Command(usages = {"replay", "r"}, desc = "Replay mode.")
+    @Command(usages = {"replay", "r", "repeat"}, desc = "Replay mode.")
     public void replay(CommandEvent e) {
         if (e.getArgs().length == 1) {
             SOUND_MANAGER.setReplay(!SOUND_MANAGER.getReplay());

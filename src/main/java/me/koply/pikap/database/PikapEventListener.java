@@ -12,6 +12,9 @@ import me.koply.pikap.sound.SoundManager;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PikapEventListener extends EventListenerAdapter {
 
@@ -60,16 +63,17 @@ public class PikapEventListener extends EventListenerAdapter {
             playlist.setCreatedAt(Timestamp.from(Instant.now()));
             db.createPlaylist(playlist);
         }
-        String foundIds = playlist.getTrackIdsString() != null && !playlist.getTrackIdsString().isEmpty() ? playlist.getTrackIdsString() : "";
+        List<Integer> foundIds = Arrays.stream(playlist.getTrackIds()).boxed().collect(Collectors.toList());
 
-        StringBuilder trackIds = new StringBuilder(foundIds);
         Track firstTrack = null;
         for (AudioTrack track : audioPlaylist.getTracks()) {
             Track savedTrack = saveNewTrack(track, false, playlist.getId());
             if (firstTrack == null) firstTrack = savedTrack;
-            trackIds.append(savedTrack.getId()).append(",");
+            if (!foundIds.contains(savedTrack.getId())) {
+                foundIds.add(savedTrack.getId());
+            }
         }
-        playlist.setTrackIds(trackIds.toString());
+        playlist.setTrackIds(foundIds);
         db.updatePlaylist(playlist);
 
 

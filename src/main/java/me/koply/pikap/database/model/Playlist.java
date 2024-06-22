@@ -3,8 +3,10 @@ package me.koply.pikap.database.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import me.koply.pikap.util.Util;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @DatabaseTable(tableName = "playlists")
 public class Playlist {
@@ -36,14 +38,17 @@ public class Playlist {
 
     public int[] getTrackIds() {
         if (trackIds == null) {
-            return new int[] {};
+            return new int[0];
         }
-        String[] ids = trackIds.split(",");
-        int[] trackIds = new int[ids.length];
-        for (int i = 0; i < ids.length; i++) {
-            trackIds[i] = Integer.parseInt(ids[i]);
+
+        String[] splitted = trackIds.split(",");
+        int[] ids = new int[splitted.length];
+        for (int i = 0; i < splitted.length; i++) {
+            Integer parsed = Util.parseInt(splitted[i]);
+            if (parsed == null) continue;
+            ids[i] = parsed;
         }
-        return trackIds;
+        return ids;
     }
 
     public void addTrackId(int trackId) {
@@ -52,6 +57,18 @@ public class Playlist {
 
     public void setTrackIds(String trackIds) {
         this.trackIds = trackIds;
+    }
+
+    public void setTrackIds(List<Integer> trackIds) {
+        StringBuilder sb = new StringBuilder();
+        int j = 0;
+        for (Integer i : trackIds) {
+            sb.append(i);
+            if (++j != trackIds.size()) {
+                sb.append(",");
+            }
+        }
+        this.trackIds = sb.toString();
     }
 
     public int getId() {

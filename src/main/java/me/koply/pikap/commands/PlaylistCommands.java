@@ -25,7 +25,7 @@ public class PlaylistCommands implements CLICommand {
 
     @Command(usages = {"pl", "playlist"},
             desc = "Lists and plays saved playlists.",
-            usageMsg = "Usage: pl | pl <selection>", sendWithDesc = true)
+            usageMsg = "Usage: pl | pl <index>", sendWithDesc = true)
     public boolean pl(CommandEvent e) {
         if (Main.getRepository() == null) {
             Console.println("Database is not found. You can enable database from config.yml");
@@ -71,18 +71,44 @@ public class PlaylistCommands implements CLICommand {
             }
 
             int[] ids = selectedPlaylist.getTrackIds();
-            if (ids.length == 0) {
+            if (ids == null || ids.length == 0) {
                 Console.println("Playlist members not found?");
                 return false;
             }
-            int firstTrackId = ids[0];
-            Track firstTrack = Main.getRepository().queryTrackById(firstTrackId);
+            Track firstTrack = Main.getRepository().queryTrackById(ids[0]);
             String url = Constants.YT_URL_PREFIX + firstTrack.getIdentifier() + "&list=" + playlistYoutubeIdentifier + "&index=1";
             PlayQueryData data = new PlayQueryData(url, false, true, false, false);
             data.setFromPl(true);
             data.setPlName(selectedPlaylist.getName());
             SOUND_MANAGER.playTrack(data);
         }
+        return false;
+    }
+
+    @Command(usages = {"plr", "pr"},
+            desc = "Removes the selected saved playlist.",
+            usageMsg = "Usage: pr/plr <index>", sendWithDesc = true)
+    public boolean plr(CommandEvent e) {
+        if (Main.getRepository() == null) {
+            Console.println("Database is not found. You can enable database from config.yml");
+            return false;
+        }
+
+        if (e.getArgs().length == 1) {
+            return true;
+        }
+        List<Playlist> playlists = Main.getRepository().queryAllPlaylists();
+
+        Integer selection = Util.parseInt(e.getArgs()[1]);
+        if (selection == null) {
+            return true;
+        }
+        Playlist selectedPlaylist = playlists.get(selection-1);
+        if (selectedPlaylist == null) {
+            return true;
+        }
+        Main.getRepository().deletePlaylist(selectedPlaylist);
+        Console.println("Removed playlist: " + selectedPlaylist.getName());
         return false;
     }
 

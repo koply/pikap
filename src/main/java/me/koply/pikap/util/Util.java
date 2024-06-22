@@ -23,6 +23,15 @@ public final class Util {
         }
     }
 
+    public static boolean containsInt(int[] arr, int value) {
+        for (int i : arr) {
+            if (i == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static Integer parseInt(String entry) {
         try {
             return Integer.parseInt(entry);

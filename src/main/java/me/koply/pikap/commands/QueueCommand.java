@@ -9,6 +9,7 @@ import me.koply.pikap.api.cli.command.CLICommand;
 import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.event.PlayEvent;
+import me.koply.pikap.database.api.Database;
 import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.util.OutputPager;
 import me.koply.pikap.util.Util;
@@ -29,6 +30,12 @@ public class QueueCommand implements CLICommand {
         if (e.getArgs().length == 1) {
             StringBuilder sb = new StringBuilder();
             BlockingQueue<AudioTrack> queue = Main.SOUND_MANAGER.getQueue();
+
+            if (queue.isEmpty()) {
+                Console.println("Queue is empty");
+                return;
+            }
+
             int queuePager = Main.CONFIG.getQueuePager();
             int i = 1;
             if (queue.size() < queuePager+2) { // single page
@@ -70,9 +77,15 @@ public class QueueCommand implements CLICommand {
     public void last(CommandEvent e) {
         // TODO - last with numbers for played previously
         AudioTrack last = SESSION.popLastTrack();
-        if (last == null) return;
-        last = last.makeClone();
-        SoundManager.getQueueScheduler().play(last, PlayEvent.Reason.PLAY_LAST);
+        if (last == null) {
+            Database db = Main.getRepository();
+            if (db == null) return;
+            // TODO get last from db
+        } else {
+            last = last.makeClone();
+            SoundManager.getQueueScheduler().play(last, PlayEvent.Reason.PLAY_LAST);
+        }
+
     }
 
 }

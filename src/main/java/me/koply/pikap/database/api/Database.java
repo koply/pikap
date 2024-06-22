@@ -19,13 +19,17 @@ public interface Database {
     Track queryTrackByIdentifier(String identifier);
     List<Track> queryAllTracks();
     List<Track> queryTracksByIds(int[] ids);
+    Track queryLastPlayedTrack();
 
     void createFavoriteIfNotExists(FavouriteTrack track);
     void deleteFavorite(FavouriteTrack track);
+    FavouriteTrack queryFavouriteByTrackId(int trackId);
     List<FavouriteTrack> queryAllFavorites();
 
     void createPlaylist(Playlist playlist);
     void updatePlaylist(Playlist playlist);
+    void deletePlaylist(int id);
+    void deletePlaylist(Playlist playlist);
     List<Playlist> queryAllPlaylists();
     Playlist queryPlaylistById(int id);
     Playlist queryPlaylistByIdentifier(String identifier);
