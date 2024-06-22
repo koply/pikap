@@ -33,7 +33,6 @@ public class PikapEventListener extends EventListenerAdapter {
 
         // https://www.youtube.com/watch?v=bzrSweHAbIk&list=PLqjIyifcLPWGrMsrjTPvX0oBYPAXpPoMV
         String order = SoundManager.getOrder();
-        System.out.println("order geldi");
         if (order == null) return;
 
         String[] first = order.split("\\?");
@@ -46,7 +45,6 @@ public class PikapEventListener extends EventListenerAdapter {
                 break;
             }
         }
-        System.out.println("identifier: " + identifier);
         if (identifier.isEmpty()) {
             Console.log("Identifier is empty. Should be investigate...");
             return;
