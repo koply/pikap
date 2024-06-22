@@ -123,6 +123,7 @@ public class FavouriteCommands implements CLICommand {
 
             FavouriteTrack favouriteTrack = favs.get(selection);
             Track track = favouriteTrack.getTrack();
+            _playFav(track);
         }
         return false;
     }
