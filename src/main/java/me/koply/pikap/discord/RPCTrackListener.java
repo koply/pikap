@@ -16,7 +16,7 @@ public class RPCTrackListener extends EventListenerAdapter {
 
     @Override
     public void onPlay(PlayEvent e) {
-        setRPC(e.track);
+        if (!e.isAddedToQueue) setRPC(e.track);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class RPCTrackListener extends EventListenerAdapter {
 
     @Override
     public void onPlaylist(PlaylistEvent e) {
-        super.onPlaylist(e);
+        if (e.firstTrackStarted) setRPC(e.playlist.getTracks().get(0));
     }
 
     @Override
@@ -48,6 +48,8 @@ public class RPCTrackListener extends EventListenerAdapter {
     public void onResume(ResumeEvent e) {
         rpc.getActivity().assets().setSmallImage("play-w");
         rpc.getActivity().assets().setSmallText("Music Playing!");
+        rpc.getActivity().timestamps().setStart(Instant.now());
+        rpc.getActivity().timestamps().setEnd(Instant.now().plusMillis(e.track.getDuration()-e.track.getPosition()));
         rpc.getCore().activityManager().updateActivity(rpc.getActivity());
     }
 
