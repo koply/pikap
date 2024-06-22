@@ -211,7 +211,7 @@ public class SqliteDB implements Database {
 
     @Override
     public void createPlayedPlaylist(PlayedPlaylist playlist) {
-        _createIfNotExists(playedPlaylists, playlist, "playlist", playlist.getPlaylist());
+        _createIfNotExists(playedPlaylists, playlist, "playlist_id", playlist.getPlaylist().getId());
     }
 
     @Override
