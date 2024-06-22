@@ -121,6 +121,7 @@ public class FavouriteCommands implements CLICommand {
         String url = Constants.YT_URL_PREFIX + track.getIdentifier();
         PlayQueryData data = new PlayQueryData(url, true, false, false, false);
         data.setFromPf(true);
+        data.setKnownName(track.getTitle());
         SOUND_MANAGER.playTrack(data);
         return false;
     }

@@ -14,18 +14,18 @@ public class PlayQueryData {
         this.isMusic = music;
         this.creationTime = System.currentTimeMillis();
         this.fromPl = false;
-        this.plName = null;
+        this.knownName = null;
     }
 
     // from playlist command
     private boolean fromPl;
 
     // playlist name if its from playlist command
-    private String plName;
+    // favourited track's name if its from playfav command
+    private String knownName;
 
     // from playfav command
     private boolean fromPf;
-
 
 
     public boolean isFromPl() {
@@ -44,11 +44,11 @@ public class PlayQueryData {
         this.fromPf = fromPf;
     }
 
-    public String getPlName() {
-        return plName;
+    public String getKnownName() {
+        return knownName;
     }
 
-    public void setPlName(String plName) {
-        this.plName = plName;
+    public void setKnownName(String knownName) {
+        this.knownName = knownName;
     }
 }

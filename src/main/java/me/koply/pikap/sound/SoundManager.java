@@ -71,7 +71,9 @@ public class SoundManager {
     // -------------- PUBLIC API -----------------
     public void playTrack(PlayQueryData data) {
         if (data.isFromPl()) {
-            Console.info("Retrieving playlist: \"" + data.getPlName() + "\"");
+            Console.info("Retrieving playlist: \"" + data.getKnownName() + "\"");
+        } else if (data.isFromPf()) {
+            Console.info("Retrieving favourited track: \"" + data.getKnownName() + "\"");
         } else {
             Console.info("Searching... \"" + data.order + "\"");
         }

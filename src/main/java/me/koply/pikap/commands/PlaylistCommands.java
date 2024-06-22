@@ -79,7 +79,7 @@ public class PlaylistCommands implements CLICommand {
             String url = Constants.YT_URL_PREFIX + firstTrack.getIdentifier() + "&list=" + playlistYoutubeIdentifier + "&index=1";
             PlayQueryData data = new PlayQueryData(url, false, true, false, false);
             data.setFromPl(true);
-            data.setPlName(selectedPlaylist.getName());
+            data.setKnownName(selectedPlaylist.getName());
             SOUND_MANAGER.playTrack(data);
         }
         return false;
