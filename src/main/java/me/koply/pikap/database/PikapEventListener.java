@@ -70,7 +70,7 @@ public class PikapEventListener extends EventListenerAdapter {
         db.createPlaylist(playlist);
 
         PlayedPlaylist playedPlaylist = new PlayedPlaylist(playlist, firstTrack);
-        playedPlaylist.setPlayedTimestamp(playlist.getCreatedAt());
+        playedPlaylist.setPlayedAt(playlist.getCreatedAt());
 
         db.createPlayedPlaylist(playedPlaylist);
     }

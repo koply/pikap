@@ -26,7 +26,7 @@ public class PlayedPlaylist {
     @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Track lastTrack;
 
-    @DatabaseField private Timestamp playedTimestamp;
+    @DatabaseField private Timestamp playedAt;
 
     public int getId() {
         return id;
@@ -60,11 +60,11 @@ public class PlayedPlaylist {
         this.lastTrack = lastTrack;
     }
 
-    public Timestamp getPlayedTimestamp() {
-        return playedTimestamp;
+    public Timestamp getPlayedAt() {
+        return playedAt;
     }
 
-    public void setPlayedTimestamp(Timestamp playedTimestamp) {
-        this.playedTimestamp = playedTimestamp;
+    public void setPlayedAt(Timestamp playedAt) {
+        this.playedAt = playedAt;
     }
 }

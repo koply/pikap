@@ -130,11 +130,9 @@ public class DiscordRPC implements Runnable {
         try {
             while (core != null) {
                 core.runCallbacks();
-
                 Thread.sleep(1024L);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
