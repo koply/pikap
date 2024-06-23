@@ -1,6 +1,6 @@
 <h1 align="center">💿 pikap</h1>
 
-CLI YouTube player without ads. Only audio stream from YouTube by [Lavaplayer](https://github.com/sedmelluq/lavaplayer).
+CLI YouTube player without ads. Only audio stream from YouTube by [Lavaplayer](https://github.com/lavalink-devs/lavaplayer).
 <br/>
 🕰️ <b>Planned</b> update for support the SoundCloud, Twitch and local audio files. 
 
