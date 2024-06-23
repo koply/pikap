@@ -1,6 +1,7 @@
 package me.koply.pikap.api.cli.command;
 
 import com.github.tomaslanger.chalk.Chalk;
+import me.koply.pikap.Constants;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.sound.SoundManager;
 
@@ -39,7 +40,7 @@ public class CommandHandler {
             }
 
             if (!COMMAND_CLASSES.containsKey(args[0])) {
-                Console.println(Chalk.on("[NPLAYER]").red() + " There is no command for this entry.");
+                Console.println(Constants.PREFIX + "There is no command for this entry.");
                 continue;
             }
 
