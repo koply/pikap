@@ -4,19 +4,34 @@ CLI YouTube player without ads. Only audio stream from YouTube by [Lavaplayer](h
 <br/>
 🕰️ <b>Planned</b> update for support the SoundCloud, Twitch and local audio files. 
 
-### Features
-1. Minimal system usage (~100MB Memory)
+#### Current Version: beta-0.2
+
+### Objectives & Goals
+1. Minimal system usage (~150MB Memory)
 2. Fluent experience
 3. Scalable
 4. Easy to use
 5. Many planned features
+
+### Current Features
+1. YouTube search, selection at search result, YouTube Playlist playback, and queue management.
+2. Queue system: adding to queue, navigating within the queue and going back.
+3. Ability to view upcoming songs page by page, configurable via config.
+4. Song repeat mode. Ability to add songs to favorites. Play using favorite song selection or play all favorites as a playlist.
+5. Adding and removing songs from the favorites list.
+6. Show previously played *songs* and options to replay, add to queue, or delete them.
+7. Show previously played *playlists* and options to replay, add to queue, or delete them.
+8. Equalizer (some issues present but will be resolved).
+9. Commands to enable/disable DiscordRPC.
+10. Monitoring and garbage collectioning.
+
 
 <h2 align="center">📸 Screenshots</h2>
 
 <details>
 
 <summary>Click here for screenshots</summary>
-
+<h2><b>Those images from alpha version!</b></h2>
 <img src="images/1.png" />
 </br>
 <img src="images/2.png" />
@@ -38,18 +53,22 @@ sh run.sh
 <h2 align="center">🗒️ Task List</h3>
 
 - [ ] Download option.
-- [ ] Equalizer for player
+- [x] Equalizer for player
 - [ ] Support for SoundCloud, Twitch and local audio files.
 - [ ] Local web page for remote control the player
 - [x] Database initialization and integration
-- [ ] Storing information of past songs with SQLite
+- [x] Storing information of past songs with SQLite
 - [ ] Endless play mode with next suggested content from the song's YouTube page
 - [x] Discord RPC
 - [x] More efficient input-output handler (maybe tui?)
 - [x] Colorized console handler with Chalk
 - [x] Enchance the play command
-- [ ] Config commands
-- [ ] Repeat and shuffle commands
+- [x] Config commands
+- [ ] Config management commands
+- [x] Favourite commands and system
+- [x] Playlist commands
+- [x] Repeat command
+- [ ] Shuffle command
 - [x] Previous/back command
 - [x] Queue/list command
 - [ ] Optional: Output device selector
