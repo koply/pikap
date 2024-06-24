@@ -2,7 +2,6 @@ package me.koply.pikap.api.event;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import me.koply.pikap.sound.SoundManager;
 
 public class TrackEndEvent extends AudioEvent {
 
@@ -14,4 +13,13 @@ public class TrackEndEvent extends AudioEvent {
         this.reason = reason;
     }
 
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
 }

@@ -17,6 +17,16 @@ public class PlayEvent extends AudioEvent {
         this.reason = reason;
     }
 
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
+
     public enum Reason {
         // Next and playlist has their own events.
         SEARCH, PLAY_NOW, URL, PLAY_LAST

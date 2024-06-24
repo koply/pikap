@@ -2,26 +2,29 @@ package me.koply.pikap.discord;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import me.koply.pikap.Main;
 import me.koply.pikap.api.event.*;
+import me.koply.pikap.event.AudioListenerAdapter;
+import me.koply.pikap.event.EventHandler;
 import me.koply.pikap.sound.SoundManager;
 
 import java.time.Instant;
 
-public class RPCEventListener extends EventListenerAdapter {
+public class RPCAudioListener extends AudioListenerAdapter {
 
 
     private final SoundManager soundManager = SoundManager.getInstance();
     private final DiscordRPC rpc;
-    public RPCEventListener(DiscordRPC rpc) {
+    public RPCAudioListener(DiscordRPC rpc) {
         this.rpc = rpc;
     }
 
+    @EventHandler
     @Override
     public void onPlay(PlayEvent e) {
         if (!e.isAddedToQueue) setRPC(e.track);
     }
 
+    @EventHandler
     @Override
     public void onTrackEnd(TrackEndEvent e) {
         if (soundManager.getQueue().isEmpty()) {
@@ -30,16 +33,19 @@ public class RPCEventListener extends EventListenerAdapter {
         }
     }
 
+    @EventHandler
     @Override
     public void onNextTrack(NextTrackEvent e) {
         setRPC(e.nextTrack);
     }
 
+    @EventHandler
     @Override
     public void onPlaylist(PlaylistEvent e) {
         if (e.firstTrackStarted) setRPC(e.playlist.getTracks().get(0));
     }
 
+    @EventHandler
     @Override
     public void onPause(PauseEvent e) {
         rpc.getActivity().assets().setSmallImage("pause-w");
@@ -47,6 +53,7 @@ public class RPCEventListener extends EventListenerAdapter {
         rpc.getCore().activityManager().updateActivity(rpc.getActivity());
     }
 
+    @EventHandler
     @Override
     public void onResume(ResumeEvent e) {
         rpc.getActivity().assets().setSmallImage("play-w");

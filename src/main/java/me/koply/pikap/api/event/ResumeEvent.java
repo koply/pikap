@@ -9,4 +9,14 @@ public class ResumeEvent extends AudioEvent {
     public ResumeEvent(AudioTrack track) {
         this.track = track;
     }
+
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
 }

@@ -10,4 +10,13 @@ public class ReplayEvent extends AudioEvent {
         this.track = track;
     }
 
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
 }

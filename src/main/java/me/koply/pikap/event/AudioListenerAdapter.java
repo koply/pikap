@@ -1,7 +1,9 @@
-package me.koply.pikap.api.event;
+package me.koply.pikap.event;
+
+import me.koply.pikap.api.event.*;
 
 @SuppressWarnings("unused")
-public abstract class EventListenerAdapter {
+public abstract class AudioListenerAdapter implements Listener {
 
     public void onPlay(PlayEvent e) { }
     public void onTrackEnd(TrackEndEvent e) { }

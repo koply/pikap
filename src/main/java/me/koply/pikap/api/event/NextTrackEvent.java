@@ -14,6 +14,16 @@ public class NextTrackEvent extends AudioEvent {
         this.reason = reason;
     }
 
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
+    }
+
     public enum Reason {
         TRACK_END, NEXT
     }

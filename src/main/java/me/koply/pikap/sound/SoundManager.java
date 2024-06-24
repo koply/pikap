@@ -15,7 +15,7 @@ import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.PauseEvent;
 import me.koply.pikap.api.event.ResumeEvent;
 import me.koply.pikap.api.event.TrackEndEvent;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +35,7 @@ public class SoundManager {
     private static final AtomicBoolean replay = new AtomicBoolean(false);
     private static final QueueScheduler QUEUE_SCHEDULER = new QueueScheduler(player, pipeline, replay);
     private static final SearchResultHandler handler = new SearchResultHandler(QUEUE_SCHEDULER);
+    private final EventPublisher eventPublisher = EventPublisher.getInstance();
 
     public static QueueScheduler getQueueScheduler() {
         return QUEUE_SCHEDULER;
@@ -133,10 +134,11 @@ public class SoundManager {
 
     public void pause() {
         if (!player.isPaused() && player.getPlayingTrack() != null) {
+            eventPublisher.publishEvent(
+                    new PauseEvent(player.getPlayingTrack()));
             player.setPaused(true);
             pipeline.pauseOutputLine();
-            EventManager.pushEvent(
-                    new PauseEvent(player.getPlayingTrack()));
+
 
             Console.info("Paused.");
         }
@@ -146,7 +148,7 @@ public class SoundManager {
         if (player.isPaused()) {
             player.setPaused(false);
             pipeline.resumeOutputLine();
-            EventManager.pushEvent(
+            eventPublisher.publishEvent(
                     new ResumeEvent( player.getPlayingTrack()));
 
             Console.info("Resumed.");
@@ -165,7 +167,7 @@ public class SoundManager {
         AudioTrack lastTrack = player.getPlayingTrack() != null ? player.getPlayingTrack().makeClone() : null;
         if (lastTrack != null) {
             lastTrack.setPosition(player.getPlayingTrack().getPosition());
-            EventManager.pushEvent(
+            eventPublisher.publishEvent(
                     new TrackEndEvent(lastTrack, AudioTrackEndReason.STOPPED));
         }
         player.stopTrack();

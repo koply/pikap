@@ -6,7 +6,7 @@ import de.jcm.discordgamesdk.activity.Activity;
 import de.jcm.discordgamesdk.activity.ActivityType;
 import me.koply.pikap.Constants;
 import me.koply.pikap.api.cli.Console;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +26,11 @@ public class DiscordRPC implements Runnable {
     }
 
     public final Instant start;
-    private final RPCEventListener listener;
+    private final RPCAudioListener listener;
 
     public DiscordRPC() {
         start = Instant.now();
-        listener = new RPCEventListener(this);
+        listener = new RPCAudioListener(this);
     }
 
     private Core core;
@@ -42,7 +42,7 @@ public class DiscordRPC implements Runnable {
     public void loadAsync() {
         rpcThread = new Thread(this);
         rpcThread.start();
-        EventManager.registerListener(listener);
+        EventPublisher.getInstance().registerListener(listener);
     }
 
     public void close() {
@@ -50,7 +50,7 @@ public class DiscordRPC implements Runnable {
             core.close();
             rpcThread.interrupt();
             rpcThread = null;
-            EventManager.registerListener(listener);
+            EventPublisher.getInstance().registerListener(listener);
         } catch (Exception ignored) {
         }
     }
