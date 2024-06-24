@@ -86,7 +86,7 @@ public class Console {
     }
 
     public static void warn(String str) {
-        logger.warning(str);
+        logger.warning(Chalk.on(str).yellow().toString());
     }
 
     public static void debugLog(String str) {
