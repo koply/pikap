@@ -134,12 +134,12 @@ public class SoundManager {
 
     public void pause() {
         if (!player.isPaused() && player.getPlayingTrack() != null) {
-            eventPublisher.publishEvent(
-                    new PauseEvent(player.getPlayingTrack()));
+
             player.setPaused(true);
             pipeline.pauseOutputLine();
 
-
+            eventPublisher.publishEvent(
+                    new PauseEvent(player.getPlayingTrack()));
             Console.info("Paused.");
         }
     }

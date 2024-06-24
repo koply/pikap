@@ -36,11 +36,8 @@ public class EventPublisher {
 
                     if (!Event.class.isAssignableFrom(parameterClazz)) return;
 
-
                     ListenerList listeners = getListenerList(parameterClazz);
 
-                    // TODO REMOVE THIS AFTER DEBUGGING IS FINISHED.
-                    System.out.println("Added " + parameterClazz.getName() + method.getName());
                     listeners.add(new EventReflectionData(method, listener, handler.priority()));
                 });
     }
