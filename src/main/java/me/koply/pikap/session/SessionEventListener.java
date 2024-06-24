@@ -2,11 +2,11 @@ package me.koply.pikap.session;
 
 import me.koply.pikap.api.event.*;
 
-public class SessionDataListener extends EventListenerAdapter {
+public class SessionEventListener extends EventListenerAdapter {
 
     private final SessionData store;
 
-    public SessionDataListener(SessionData store) {
+    public SessionEventListener(SessionData store) {
         this.store = store;
     }
 

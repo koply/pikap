@@ -7,10 +7,10 @@ import me.koply.pikap.api.event.*;
 
 import java.time.Instant;
 
-public class RPCTrackListener extends EventListenerAdapter {
+public class RPCEventListener extends EventListenerAdapter {
 
     private final DiscordRPC rpc;
-    public RPCTrackListener(DiscordRPC rpc) {
+    public RPCEventListener(DiscordRPC rpc) {
         this.rpc = rpc;
     }
 

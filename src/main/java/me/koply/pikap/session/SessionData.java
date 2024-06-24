@@ -8,13 +8,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SessionData {
 
-    private final SessionDataListener sessionDataListener;
+    private final SessionEventListener sessionEventListener;
     public SessionData() {
-        sessionDataListener = new SessionDataListener(this);
+        sessionEventListener = new SessionEventListener(this);
     }
 
     public void registerListener() {
-        EventManager.registerListener(sessionDataListener);
+        EventManager.registerListener(sessionEventListener);
     }
 
     private State currentState = State.IDLE; // getter, setter

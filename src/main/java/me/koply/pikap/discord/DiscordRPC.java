@@ -26,12 +26,11 @@ public class DiscordRPC implements Runnable {
     }
 
     public final Instant start;
-    private final RPCTrackListener listener;
+    private final RPCEventListener listener;
 
     public DiscordRPC() {
         start = Instant.now();
-        listener = new RPCTrackListener(this);
-
+        listener = new RPCEventListener(this);
     }
 
     private Core core;
