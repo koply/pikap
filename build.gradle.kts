@@ -39,6 +39,20 @@ publishing {
 }
 
 tasks {
+    jar {
+        manifest {
+            attributes["Implementation-Title"] = project.name
+            attributes["Implementation-Version"] = project.version
+            attributes["Manifest-Version"] = "1.0"
+            attributes["Main-Class"] = "me.koply.pikap.Main"
+        }
+    }
+    javaexec {
+        classpath = sourceSets.main.get().runtimeClasspath
+        mainClass = application.mainClass
+        standardInput = System.`in`
+        jvmArgs(application.applicationDefaultJvmArgs)
+    }
     shadowJar {
         minimize {
             exclude(dependency(libs.org.xerial.sqlite.jdbc.get()))
