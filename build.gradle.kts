@@ -47,20 +47,21 @@ tasks {
             attributes["Main-Class"] = "me.koply.pikap.Main"
         }
     }
-    javaexec {
-        classpath = sourceSets.main.get().runtimeClasspath
-        mainClass = application.mainClass
+
+    named<JavaExec>("run") {
         standardInput = System.`in`
-        jvmArgs(application.applicationDefaultJvmArgs)
     }
+
     shadowJar {
         minimize {
             exclude(dependency(libs.org.xerial.sqlite.jdbc.get()))
         }
     }
+
     compileJava {
         options.encoding = Charsets.UTF_8.name()
     }
+
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }
