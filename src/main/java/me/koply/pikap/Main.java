@@ -45,7 +45,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(Chalk.on(Constants.BANNER).red() + "\n" + Constants.FIRST_LINE +"\n");
 
-        CONFIG.initialize();
+        boolean configStatus = CONFIG.initialize();
+        if (!configStatus) {
+            Console.warn(Constants.PREFIX + "Probably you're using an old version's config.yml file. Please delete the config.yml and restart Pikap.");
+            System.exit(1);
+        }
 
         Databases selectedDatabase = Databases.fromName(CONFIG.getOrDefault("db", ""));
         if (selectedDatabase == null) {
@@ -70,12 +74,12 @@ public class Main {
         // TODO: Windows Error
         // KEY_LISTENER.registerHook();
 
-        Console.info("Initializing the Discord RPC module.");
+        Console.debugLog("Initializing the Discord RPC module.");
         if (DiscordRPC.getInstance().prepare()) {
             DiscordRPC.getInstance().loadAsync();
-            Console.info("Discord RPC initialized.");
+            Console.debugLog("Discord RPC initialized.");
         } else {
-            Console.info("Discord RPC is not initialized. Disabling module...");
+            Console.debugLog("Discord RPC is not initialized. Disabling module...");
         }
 
         if (CONFIG.isDebug()) {

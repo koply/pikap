@@ -12,6 +12,7 @@ import me.koply.pikap.util.*;
 
 import java.util.Locale;
 
+import static me.koply.pikap.Main.CONFIG;
 import static me.koply.pikap.Main.SOUND_MANAGER;
 
 @OnlyInstance
@@ -110,7 +111,8 @@ public class TrackControlCommands implements CLICommand {
         if (volume == null) {
             println("Invalid entry. Current volume: " + SOUND_MANAGER.getVolume());
         } else {
-            volume = volume > 100 ? 100 : volume < 0 ? 0 : volume;
+            int maxVolume = Util.parseIntOrDefault(CONFIG.get("maximum_volume"), 100);
+            volume = volume > maxVolume ? maxVolume : volume < 0 ? 0 : volume;
             SOUND_MANAGER.setVolume(volume);
             println("New volume: " + volume);
         }

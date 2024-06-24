@@ -1,5 +1,6 @@
 package me.koply.pikap.config;
 
+import me.koply.pikap.Constants;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.util.StringUtil;
@@ -33,21 +34,26 @@ public class ConfigManager extends LightYML {
         }
     }
 
-    public void initialize() {
+    public boolean initialize() {
         createDefault();
         readYML(file);
+
+        if (get("maximum_volume") == null) {
+            return false;
+        }
 
         String debugValue = get("debug");
         if (debugValue != null) {
             debug = debugValue.equalsIgnoreCase("true");
         }
 
-        String str = getOrDefault("searchLimitor", null);
+        String str = getOrDefault("search_limitor", null);
         Integer searchLimitorInt = Util.parseInt(str);
         searchLimitor = searchLimitorInt == null ? -1 : searchLimitorInt;
 
-        Integer queuePagerInt = Util.parseInt(getOrDefault("queuePager", null));
+        Integer queuePagerInt = Util.parseInt(getOrDefault("queue_pager", null));
         queuePager = queuePagerInt == null ? -1 : queuePagerInt;
+        return true;
     }
 
     private boolean debug = true;

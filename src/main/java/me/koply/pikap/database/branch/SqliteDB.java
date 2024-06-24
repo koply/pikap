@@ -30,10 +30,10 @@ public class SqliteDB implements Database {
 
     @Override
     public boolean connect(Map<String, String> config) {
-        String dataFilePath = config.getOrDefault("dbFile", "data_" + Util.getDateForFileName() + ".db");
+        String dataFilePath = config.getOrDefault("db_file", "data_" + Util.getDateForFileName() + ".db");
 
-        if (!config.containsKey("dbfile")) {
-            Console.debugLog("The dbfile entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
+        if (!config.containsKey("db_file")) {
+            Console.info("The db_file entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
         }
 
         String connectionUrl = "jdbc:sqlite:" + dataFilePath;
