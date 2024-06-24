@@ -1,6 +1,5 @@
 package me.koply.pikap.config;
 
-import me.koply.pikap.Constants;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.util.StringUtil;
