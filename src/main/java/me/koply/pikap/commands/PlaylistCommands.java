@@ -34,7 +34,7 @@ public class PlaylistCommands implements CLICommand {
         List<Playlist> playlists = Main.getRepository().queryAllPlaylists();
         if (e.getArgs().length == 1) {
             if (playlists.isEmpty()) {
-                Console.println("No saved playlists found.");
+                Console.println("There are no saved playlists found.");
                 return false;
             }
             StringBuilder sb = new StringBuilder();

@@ -31,6 +31,10 @@ public class FavouriteCommands implements CLICommand {
             return;
         }
         List<FavouriteTrack> favs = Main.getRepository().queryAllFavorites();
+        if (favs.isEmpty()) {
+            Console.println("There are no songs added to favorites.");
+            return;
+        }
         StringBuilder sb = new StringBuilder();
         int i = 1;
         for (FavouriteTrack fav : favs) {
