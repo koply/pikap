@@ -3,8 +3,12 @@
 /.idea
 /logs
 /lib
+/.gradle
+/build
 dependency-reduced-pom.xml
 ./*.yml
 ./*.db
 *.log
 *.iml
+config.yml
+data.db

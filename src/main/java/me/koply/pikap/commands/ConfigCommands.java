@@ -8,7 +8,7 @@ import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 
 import java.util.Map;
-
+@SuppressWarnings("unused")
 public class ConfigCommands implements CLICommand {
 
     @Command(usages = "config", desc = "Shows the selected configurations.")

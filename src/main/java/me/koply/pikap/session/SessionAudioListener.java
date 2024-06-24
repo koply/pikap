@@ -1,15 +1,18 @@
 package me.koply.pikap.session;
 
 import me.koply.pikap.api.event.*;
+import me.koply.pikap.event.AudioListenerAdapter;
+import me.koply.pikap.event.EventHandler;
 
-public class SessionEventListener extends EventListenerAdapter {
+public class SessionAudioListener extends AudioListenerAdapter {
 
     private final SessionData store;
 
-    public SessionEventListener(SessionData store) {
+    public SessionAudioListener(SessionData store) {
         this.store = store;
     }
 
+    @EventHandler
     @Override
     public void onPlay(PlayEvent e) {
         if (!e.isAddedToQueue) {
@@ -18,6 +21,7 @@ public class SessionEventListener extends EventListenerAdapter {
         }
     }
 
+    @EventHandler
     @Override
     public void onPause(PauseEvent e) {
         if (store.getCurrentState() == State.PLAYING_TRACK) {
@@ -27,6 +31,7 @@ public class SessionEventListener extends EventListenerAdapter {
         }
     }
 
+    @EventHandler
     @Override
     public void onResume(ResumeEvent e) {
         if (store.getCurrentState() == State.PAUSED_TRACK) {
@@ -36,6 +41,7 @@ public class SessionEventListener extends EventListenerAdapter {
         }
     }
 
+    @EventHandler
     @Override
     public void onTrackEnd(TrackEndEvent e) {
         store.addTrack(e.endTrack);
@@ -43,6 +49,7 @@ public class SessionEventListener extends EventListenerAdapter {
         store.getPlayingNow().setPlayingTrack(null);
     }
 
+    @EventHandler
     @Override
     public void onNextTrack(NextTrackEvent e) {
         if (e.pastTrack != null) store.addTrack(e.pastTrack);
@@ -50,6 +57,7 @@ public class SessionEventListener extends EventListenerAdapter {
         store.setCurrentState(State.PLAYING_TRACK);
     }
 
+    @EventHandler
     @Override
     public void onPlaylist(PlaylistEvent e) {
         store.getPlayingNow().setPlayingTrack(e.playlist.getTracks().get(0));

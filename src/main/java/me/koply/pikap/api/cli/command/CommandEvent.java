@@ -1,6 +1,8 @@
 package me.koply.pikap.api.cli.command;
 
-public class CommandEvent {
+import me.koply.pikap.event.Event;
+
+public class CommandEvent implements Event {
 
     public CommandEvent(String[] args, String pureCommand) {
         this.args = args;
@@ -16,5 +18,15 @@ public class CommandEvent {
 
     public String getPureCommand() {
         return pureCommand;
+    }
+
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
     }
 }

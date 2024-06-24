@@ -8,6 +8,8 @@ import me.koply.pikap.database.api.Database;
 import me.koply.pikap.database.model.PlayedPlaylist;
 import me.koply.pikap.database.model.Playlist;
 import me.koply.pikap.database.model.Track;
+import me.koply.pikap.event.AudioListenerAdapter;
+import me.koply.pikap.event.EventHandler;
 import me.koply.pikap.sound.SoundManager;
 
 import java.sql.Timestamp;
@@ -16,13 +18,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PikapEventListener extends EventListenerAdapter {
+public class PikapAudioListener extends AudioListenerAdapter {
 
     private final Database db;
-    public PikapEventListener(Database db) {
+    public PikapAudioListener(Database db) {
         this.db = db;
     }
 
+    @EventHandler
     @Override
     public void onPlay(PlayEvent e) {
         saveNewTrack(e.track, true, null);
@@ -83,6 +86,7 @@ public class PikapEventListener extends EventListenerAdapter {
         db.createPlayedPlaylist(playedPlaylist);
     }
 
+    @EventHandler
     @Override
     public void onNextTrack(NextTrackEvent e) {
         if (e.reason == NextTrackEvent.Reason.NEXT && e.pastTrack != null) {
@@ -93,6 +97,7 @@ public class PikapEventListener extends EventListenerAdapter {
         saveNewTrack(e.nextTrack, true, null);
     }
 
+    @EventHandler
     @Override
     public void onTrackEnd(TrackEndEvent e) {
         Track track = db.queryTrackByIdentifier(e.endTrack.getIdentifier());
@@ -101,6 +106,7 @@ public class PikapEventListener extends EventListenerAdapter {
         db.updateTrack(track);
     }
 
+    @EventHandler
     @Override
     public void onPause(PauseEvent e) {
         Track track = db.queryTrackByIdentifier(e.track.getIdentifier());

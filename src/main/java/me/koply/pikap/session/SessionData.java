@@ -1,20 +1,20 @@
 package me.koply.pikap.session;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SessionData {
 
-    private final SessionEventListener sessionEventListener;
+    private final SessionAudioListener sessionEventListener;
     public SessionData() {
-        sessionEventListener = new SessionEventListener(this);
+        sessionEventListener = new SessionAudioListener(this);
     }
 
     public void registerListener() {
-        EventManager.registerListener(sessionEventListener);
+        EventPublisher.getInstance().registerListener(sessionEventListener);
     }
 
     private State currentState = State.IDLE; // getter, setter

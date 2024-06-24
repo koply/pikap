@@ -20,8 +20,10 @@ import java.util.concurrent.BlockingQueue;
 
 import static me.koply.pikap.Main.SESSION;
 
+@SuppressWarnings("unused")
 public class QueueCommand implements CLICommand {
 
+    private final SoundManager soundManager = SoundManager.getInstance();
     private static final Ansi.Color YELLOW = Ansi.Color.YELLOW;
     private static final Ansi.Color BLUE = Ansi.Color.BLUE;
 
@@ -29,7 +31,7 @@ public class QueueCommand implements CLICommand {
     public void queue(CommandEvent e) {
         if (e.getArgs().length == 1) {
             StringBuilder sb = new StringBuilder();
-            BlockingQueue<AudioTrack> queue = Main.SOUND_MANAGER.getQueue();
+            BlockingQueue<AudioTrack> queue = soundManager.getQueue();
 
             if (queue.isEmpty()) {
                 Console.println("Queue is empty");
@@ -60,7 +62,7 @@ public class QueueCommand implements CLICommand {
                 pager.execute("[QUEUE] Enter page number: ");
             }
         } else if (e.getArgs()[1].equalsIgnoreCase("clear")) {
-            Main.SOUND_MANAGER.getQueue().clear();
+            soundManager.getQueue().clear();
             Console.prefixln("Queue cleared.");
         }
     }
@@ -79,7 +81,8 @@ public class QueueCommand implements CLICommand {
         AudioTrack last = SESSION.popLastTrack();
         if (last == null) {
             Database db = Main.getRepository();
-            if (db == null) return;
+            if (db == null) {
+            }
             // TODO get last from db
         } else {
             last = last.makeClone();

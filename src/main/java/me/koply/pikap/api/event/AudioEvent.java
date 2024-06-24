@@ -1,16 +1,18 @@
 package me.koply.pikap.api.event;
 
+import me.koply.pikap.event.Event;
 import me.koply.pikap.sound.SoundManager;
 
-public abstract class AudioEvent {
+public abstract class AudioEvent implements Event {
 
-    public final SoundManager soundManager;
-    protected AudioEvent(SoundManager soundManager) {
-        this.soundManager = soundManager;
-    }
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     @Override
     public String toString() {
         return this.getClass().getName();
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }

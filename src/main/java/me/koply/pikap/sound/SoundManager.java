@@ -11,12 +11,11 @@ import dev.lavalink.youtube.clients.AndroidLite;
 import dev.lavalink.youtube.clients.Music;
 import dev.lavalink.youtube.clients.MusicWithThumbnail;
 import dev.lavalink.youtube.clients.Web;
-import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.PauseEvent;
 import me.koply.pikap.api.event.ResumeEvent;
 import me.koply.pikap.api.event.TrackEndEvent;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,7 @@ import static com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats.C
 
 public class SoundManager {
 
-    public SoundManager() {
+    private SoundManager() {
     }
 
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
@@ -36,6 +35,7 @@ public class SoundManager {
     private static final AtomicBoolean replay = new AtomicBoolean(false);
     private static final QueueScheduler QUEUE_SCHEDULER = new QueueScheduler(player, pipeline, replay);
     private static final SearchResultHandler handler = new SearchResultHandler(QUEUE_SCHEDULER);
+    private final EventPublisher eventPublisher = EventPublisher.getInstance();
 
     public static QueueScheduler getQueueScheduler() {
         return QUEUE_SCHEDULER;
@@ -50,16 +50,21 @@ public class SoundManager {
         return QUEUE_SCHEDULER.queue;
     }
 
-    public void initialize() {
-        // we don't need a bunch of these sources
-        // AudioSourceManagers.registerRemoteSources(playerManager);
-        // just YouTube for now
+    private static SoundManager instance = null;
+
+    public static SoundManager getInstance() {
+        if(instance!= null) return instance;
+
+        instance = new SoundManager();
+
         playerManager.registerSourceManager(new YoutubeAudioSourceManager(true, new Web(), new Music(), new MusicWithThumbnail(), new AndroidLite()));
 
         playerManager.getConfiguration().setOutputFormat(COMMON_PCM_S16_BE);
         playerManager.setPlayerCleanupThreshold(TimeUnit.HOURS.toMillis(24));
         player.addListener(QUEUE_SCHEDULER);
-        setVolume(75);
+        player.setVolume(75);
+
+        return instance;
     }
 
     public static void shutdown() {
@@ -129,11 +134,12 @@ public class SoundManager {
 
     public void pause() {
         if (!player.isPaused() && player.getPlayingTrack() != null) {
+
             player.setPaused(true);
             pipeline.pauseOutputLine();
-            EventManager.pushEvent(
-                    new PauseEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
 
+            eventPublisher.publishEvent(
+                    new PauseEvent(player.getPlayingTrack()));
             Console.info("Paused.");
         }
     }
@@ -142,8 +148,8 @@ public class SoundManager {
         if (player.isPaused()) {
             player.setPaused(false);
             pipeline.resumeOutputLine();
-            EventManager.pushEvent(
-                    new ResumeEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+            eventPublisher.publishEvent(
+                    new ResumeEvent( player.getPlayingTrack()));
 
             Console.info("Resumed.");
         }
@@ -161,8 +167,8 @@ public class SoundManager {
         AudioTrack lastTrack = player.getPlayingTrack() != null ? player.getPlayingTrack().makeClone() : null;
         if (lastTrack != null) {
             lastTrack.setPosition(player.getPlayingTrack().getPosition());
-            EventManager.pushEvent(
-                    new TrackEndEvent(Main.SOUND_MANAGER, lastTrack, AudioTrackEndReason.STOPPED));
+            eventPublisher.publishEvent(
+                    new TrackEndEvent(lastTrack, AudioTrackEndReason.STOPPED));
         }
         player.stopTrack();
         pipeline.shutdownThread(); // be careful

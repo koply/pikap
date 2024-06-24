@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Console {
 
     public static final Scanner SC = new Scanner(System.in);
-    public static final Logger logger = Logger.getLogger("NPlayer");
+    public static final Logger logger = Logger.getLogger("PIKAP");
 
     public static final DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
     static {

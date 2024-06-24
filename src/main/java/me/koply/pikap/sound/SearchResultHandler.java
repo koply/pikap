@@ -11,7 +11,7 @@ import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.PlayEvent;
 import me.koply.pikap.api.event.PlaylistEvent;
 import me.koply.pikap.commands.TrackControlCommands;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.util.Util;
 
 import java.util.List;
@@ -22,6 +22,7 @@ public class SearchResultHandler implements AudioLoadResultHandler {
     private static final Ansi.Color BLUE = Ansi.Color.BLUE;
 
     private final QueueScheduler scheduler;
+    private final EventPublisher eventPublisher = EventPublisher.getInstance();
     public SearchResultHandler(QueueScheduler scheduler) {
         this.scheduler = scheduler;
     }
@@ -47,7 +48,7 @@ public class SearchResultHandler implements AudioLoadResultHandler {
             duration += scheduler.addQueuePlaylist(audioPlaylist);
 
             Console.prefixln("The playlist queued with " + playlist.size() + " tracks. Total time: " + Util.formatMilliSecond(duration));
-            EventManager.pushEvent(new PlaylistEvent(Main.SOUND_MANAGER, audioPlaylist, duration, started));
+            eventPublisher.publishEvent(new PlaylistEvent(audioPlaylist, duration, started));
 
         } else if (scheduler.getQueryData().playNow) { // pn command
             scheduler.play(playlist.get(0), PlayEvent.Reason.PLAY_NOW);

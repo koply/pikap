@@ -6,8 +6,11 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
+import me.koply.pikap.sound.SoundManager;
 
 public class KeyboardListener implements NativeKeyListener {
+
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     public void registerHook() {
         try {
@@ -42,10 +45,10 @@ public class KeyboardListener implements NativeKeyListener {
     public void nativeKeyPressed(NativeKeyEvent e) {
         switch (e.getRawCode()) {
             case PLAY_PAUSE_RAW: // play
-                if (Main.SOUND_MANAGER.isPaused()) {
-                    Main.SOUND_MANAGER.resume();
+                if (soundManager.isPaused()) {
+                    soundManager.resume();
                 } else {
-                    Main.SOUND_MANAGER.pause();
+                    soundManager.pause();
                 }
                 break;
             case PREVIOUS_RAW:
@@ -53,7 +56,7 @@ public class KeyboardListener implements NativeKeyListener {
                 // TODO
                 break;
             case NEXT_RAW:
-                Main.SOUND_MANAGER.nextTrack(1);
+                soundManager.nextTrack(1);
                 break;
             default:
                 break;

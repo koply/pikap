@@ -1,7 +1,6 @@
 package me.koply.pikap.api.event;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import me.koply.pikap.sound.SoundManager;
 
 public class PlayEvent extends AudioEvent {
 
@@ -12,11 +11,20 @@ public class PlayEvent extends AudioEvent {
     public final boolean isAddedToQueue;
     public final Reason reason;
 
-    public PlayEvent(SoundManager soundManager, AudioTrack track, boolean isAddedToQueue, Reason reason) {
-        super(soundManager);
+    public PlayEvent(AudioTrack track, boolean isAddedToQueue, Reason reason) {
         this.track = track;
         this.isAddedToQueue = isAddedToQueue;
         this.reason = reason;
+    }
+
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return false;
     }
 
     public enum Reason {

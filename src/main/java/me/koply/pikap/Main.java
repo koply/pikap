@@ -6,17 +6,16 @@ import me.koply.pikap.api.cli.command.CommandHandler;
 import me.koply.pikap.commands.HelpCommand;
 import me.koply.pikap.commands.TrackControlCommands;
 import me.koply.pikap.config.ConfigManager;
-import me.koply.pikap.database.PikapEventListener;
+import me.koply.pikap.database.PikapAudioListener;
 import me.koply.pikap.database.api.DBFactory;
 import me.koply.pikap.database.api.Database;
 import me.koply.pikap.database.branch.Databases;
 import me.koply.pikap.discord.DiscordRPC;
-import me.koply.pikap.event.EventManager;
+import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.keyhook.KeyboardListener;
 import me.koply.pikap.session.SessionData;
-import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.sound.recorder.RecordedTracksManager;
-import me.koply.pikap.test.AudioEventDebugger;
+import me.koply.pikap.test.AudioAudioDebugger;
 
 public class Main {
 
@@ -33,8 +32,6 @@ public class Main {
     public static final RecordedTracksManager RECORD_MANAGER = new RecordedTracksManager();
 
     public static final SessionData SESSION = new SessionData();
-
-    public static final SoundManager SOUND_MANAGER = new SoundManager();
 
     private static final KeyboardListener KEY_LISTENER = new KeyboardListener();
     private static final CommandHandler COMMAND_HANDLER = new CommandHandler(HelpCommand.class.getPackageName());
@@ -61,15 +58,13 @@ public class Main {
                 Console.warn("PANIC! Database connection isn't established. Check the credentials/file identifies.");
                 return;
             } else {
-                EventManager.registerListener(new PikapEventListener(repository));
+                EventPublisher.getInstance().registerListener(new PikapAudioListener(repository));
             }
         }
 
         if (CONFIG.entryCheckIgnoreCase("record", "true", "yes")) {
             RECORD_MANAGER.readTrackFiles();
         }
-
-        SOUND_MANAGER.initialize();
 
         // TODO: Windows Error
         // KEY_LISTENER.registerHook();
@@ -83,7 +78,7 @@ public class Main {
         }
 
         if (CONFIG.isDebug()) {
-            EventManager.registerListener(new AudioEventDebugger());
+            EventPublisher.getInstance().registerListener(new AudioAudioDebugger());
         }
         // EventManager.debugListeners();
 
