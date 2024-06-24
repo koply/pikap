@@ -40,6 +40,14 @@ public final class Util {
         }
     }
 
+    public static int parseIntOrDefault(String entry, int defaultValue) {
+        try {
+            return Integer.parseInt(entry);
+        } catch (Exception ex) {
+            return defaultValue;
+        }
+    }
+
     public static Float parseFloat(String entry) {
         try {
             return Float.parseFloat(entry);
