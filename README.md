@@ -38,7 +38,11 @@ CLI YouTube player without ads. Only audio stream from YouTube by [Lavaplayer](h
 
 </details>
 
-<h2 align="center">⚙️ How To Build And Run</h3>
+<h2 align="center">⚙️ Configuring</h3>
+
+After the first run, the config.yml file is created in the master folder with its default configurations. By default, SQLite will be selected as the database. You can simply change it according to your wishes.
+
+<h2 align="center">🔨 How To Build And Run</h2>
 
 I will also share the compiled files when <b>pikap</b> goes into beta version.
 
@@ -55,6 +59,7 @@ sh run.sh
 - [ ] Download option.
 - [x] Equalizer for player
 - [ ] Support for SoundCloud, Twitch and local audio files.
+- [ ] Localization (output language)
 - [ ] Local web page for remote control the player
 - [x] Database initialization and integration
 - [x] Storing information of past songs with SQLite
