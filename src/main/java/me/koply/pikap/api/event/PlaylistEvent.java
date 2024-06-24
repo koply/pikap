@@ -9,8 +9,7 @@ public class PlaylistEvent extends AudioEvent {
     public final long duration;
     public final boolean firstTrackStarted;
 
-    public PlaylistEvent(SoundManager soundManager, AudioPlaylist playlist, long duration, boolean firstTrackStarted) {
-        super(soundManager);
+    public PlaylistEvent(AudioPlaylist playlist, long duration, boolean firstTrackStarted) {
         this.playlist = playlist;
         this.duration = duration;
         this.firstTrackStarted = firstTrackStarted;

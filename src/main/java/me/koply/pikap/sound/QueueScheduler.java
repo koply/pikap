@@ -21,6 +21,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueueScheduler extends AudioEventAdapter {
+    
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     private final AudioPlayer player;
     private final PipelineController pipeline;
@@ -78,7 +80,7 @@ public class QueueScheduler extends AudioEventAdapter {
             Console.prefixln("Added to queue. (" + Chalk.on(TrackUtil.trackToString(track)).green() + ")");
         } else {
             pipeline.prepareAndRun();
-            Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
+            Console.println(StringUtil.getTrackBoxWithCurrentTime(soundManager));
         }
         return isStarted;
     }
@@ -101,7 +103,7 @@ public class QueueScheduler extends AudioEventAdapter {
     public void play(AudioTrack track, PlayEvent.Reason reason) {
         boolean isStarted = play(track);
         EventManager.pushEvent(
-                new PlayEvent(Main.SOUND_MANAGER, track, !isStarted, reason));
+                new PlayEvent(track, !isStarted, reason));
     }
 
     /**
@@ -124,10 +126,10 @@ public class QueueScheduler extends AudioEventAdapter {
 
         String suffix = number != skipped ? Chalk.on("(" + number +")").red().toString() : "";
         Console.prln(Chalk.on("[ Next: " + skipped + " -→ ] ").green().toString() + suffix);
-        Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
+        Console.println(StringUtil.getTrackBoxWithCurrentTime(soundManager));
 
         EventManager.pushEvent(
-                new NextTrackEvent(Main.SOUND_MANAGER, lastTrack, poll, NextTrackEvent.Reason.NEXT));
+                new NextTrackEvent(lastTrack, poll, NextTrackEvent.Reason.NEXT));
     }
 
     /**
@@ -145,15 +147,15 @@ public class QueueScheduler extends AudioEventAdapter {
 
         if (replay.get()) {
             AudioTrack replayTrack = track.makeClone();
-            EventManager.pushEvent(new ReplayEvent(Main.SOUND_MANAGER, replayTrack));
+            EventManager.pushEvent(new ReplayEvent(replayTrack));
             Console.prln(Chalk.on("[ Replay: On ]").green().toString());
-            Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
+            Console.println(StringUtil.getTrackBoxWithCurrentTime(soundManager));
             return;
         }
 
         if (queue.isEmpty()) {
             EventManager.pushEvent(
-                    new TrackEndEvent(Main.SOUND_MANAGER, track, endReason));
+                    new TrackEndEvent( track, endReason));
             Console.info("Empty queue...");
             return;
         }
@@ -163,10 +165,10 @@ public class QueueScheduler extends AudioEventAdapter {
         player.startTrack(poll, false);
 
         Console.prln(Chalk.on("[ -→ ]").green().toString());
-        Console.println(StringUtil.getTrackBoxWithCurrentTime(Main.SOUND_MANAGER));
+        Console.println(StringUtil.getTrackBoxWithCurrentTime(soundManager));
 
         EventManager.pushEvent(
-                new NextTrackEvent(Main.SOUND_MANAGER, track, poll, NextTrackEvent.Reason.TRACK_END));
+                new NextTrackEvent(track, poll, NextTrackEvent.Reason.TRACK_END));
      }
 
 }

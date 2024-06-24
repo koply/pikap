@@ -47,7 +47,7 @@ public class SearchResultHandler implements AudioLoadResultHandler {
             duration += scheduler.addQueuePlaylist(audioPlaylist);
 
             Console.prefixln("The playlist queued with " + playlist.size() + " tracks. Total time: " + Util.formatMilliSecond(duration));
-            EventManager.pushEvent(new PlaylistEvent(Main.SOUND_MANAGER, audioPlaylist, duration, started));
+            EventManager.pushEvent(new PlaylistEvent(audioPlaylist, duration, started));
 
         } else if (scheduler.getQueryData().playNow) { // pn command
             scheduler.play(playlist.get(0), PlayEvent.Reason.PLAY_NOW);

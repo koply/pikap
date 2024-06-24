@@ -4,13 +4,14 @@ import me.koply.pikap.sound.SoundManager;
 
 public abstract class AudioEvent {
 
-    public final SoundManager soundManager;
-    protected AudioEvent(SoundManager soundManager) {
-        this.soundManager = soundManager;
-    }
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     @Override
     public String toString() {
         return this.getClass().getName();
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }

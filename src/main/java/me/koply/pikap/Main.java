@@ -34,8 +34,6 @@ public class Main {
 
     public static final SessionData SESSION = new SessionData();
 
-    public static final SoundManager SOUND_MANAGER = new SoundManager();
-
     private static final KeyboardListener KEY_LISTENER = new KeyboardListener();
     private static final CommandHandler COMMAND_HANDLER = new CommandHandler(HelpCommand.class.getPackageName());
 
@@ -68,8 +66,6 @@ public class Main {
         if (CONFIG.entryCheckIgnoreCase("record", "true", "yes")) {
             RECORD_MANAGER.readTrackFiles();
         }
-
-        SOUND_MANAGER.initialize();
 
         // TODO: Windows Error
         // KEY_LISTENER.registerHook();

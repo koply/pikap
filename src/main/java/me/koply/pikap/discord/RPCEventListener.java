@@ -4,11 +4,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.event.*;
+import me.koply.pikap.sound.SoundManager;
 
 import java.time.Instant;
 
 public class RPCEventListener extends EventListenerAdapter {
 
+
+    private final SoundManager soundManager = SoundManager.getInstance();
     private final DiscordRPC rpc;
     public RPCEventListener(DiscordRPC rpc) {
         this.rpc = rpc;
@@ -21,7 +24,7 @@ public class RPCEventListener extends EventListenerAdapter {
 
     @Override
     public void onTrackEnd(TrackEndEvent e) {
-        if (Main.SOUND_MANAGER.getQueue().isEmpty()) {
+        if (soundManager.getQueue().isEmpty()) {
             rpc.setActivity(rpc.createDefaultActivityWithTimestamp());
             rpc.getCore().activityManager().updateActivity(rpc.getActivity());
         }

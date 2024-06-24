@@ -11,14 +11,16 @@ import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.database.model.Playlist;
 import me.koply.pikap.database.model.Track;
 import me.koply.pikap.sound.PlayQueryData;
+import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.util.OutputPager;
 import me.koply.pikap.util.Util;
 
 import java.util.List;
 
-import static me.koply.pikap.Main.SOUND_MANAGER;
-
+@SuppressWarnings("unused")
 public class PlaylistCommands implements CLICommand {
+
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     private static final Ansi.Color YELLOW = Ansi.Color.YELLOW;
     private static final Ansi.Color BLUE = Ansi.Color.BLUE;
@@ -80,7 +82,7 @@ public class PlaylistCommands implements CLICommand {
             PlayQueryData data = new PlayQueryData(url, false, true, false, false);
             data.setFromPl(true);
             data.setKnownName(selectedPlaylist.getName());
-            SOUND_MANAGER.playTrack(data);
+            soundManager.playTrack(data);
         }
         return false;
     }

@@ -11,17 +11,19 @@ import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.database.model.FavouriteTrack;
 import me.koply.pikap.database.model.Track;
 import me.koply.pikap.sound.PlayQueryData;
+import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.util.StringUtil;
 import me.koply.pikap.util.Util;
 
 import java.util.List;
 
-import static me.koply.pikap.Main.SOUND_MANAGER;
 
 public class FavouriteCommands implements CLICommand {
 
     private static final Ansi.Color YELLOW = Ansi.Color.YELLOW;
     private static final Ansi.Color BLUE = Ansi.Color.BLUE;
+
+    private final SoundManager soundManager = SoundManager.getInstance();
 
     @Command(usages = {"favs", "favourites", "favorites", "favoriler", "favoris"},
             desc = "Lists the favourite songs.")
@@ -55,7 +57,7 @@ public class FavouriteCommands implements CLICommand {
             Console.println("Database is not found. You can enable database from config.yml");
             return;
         }
-        AudioTrack track = SOUND_MANAGER.getPlayingTrack();
+        AudioTrack track = soundManager.getPlayingTrack();
         if (track == null) {
             println("Doesn't playing anything to fav.");
             return;
@@ -137,7 +139,7 @@ public class FavouriteCommands implements CLICommand {
         PlayQueryData data = new PlayQueryData(url, true, false, false, false);
         data.setFromPf(true);
         data.setKnownName(track.getTitle());
-        SOUND_MANAGER.playTrack(data);
+        soundManager.playTrack(data);
     }
 
 }

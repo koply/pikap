@@ -11,7 +11,6 @@ import dev.lavalink.youtube.clients.AndroidLite;
 import dev.lavalink.youtube.clients.Music;
 import dev.lavalink.youtube.clients.MusicWithThumbnail;
 import dev.lavalink.youtube.clients.Web;
-import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.PauseEvent;
 import me.koply.pikap.api.event.ResumeEvent;
@@ -26,7 +25,7 @@ import static com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats.C
 
 public class SoundManager {
 
-    public SoundManager() {
+    private SoundManager() {
     }
 
     private static final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
@@ -50,16 +49,21 @@ public class SoundManager {
         return QUEUE_SCHEDULER.queue;
     }
 
-    public void initialize() {
-        // we don't need a bunch of these sources
-        // AudioSourceManagers.registerRemoteSources(playerManager);
-        // just YouTube for now
+    private static SoundManager instance = null;
+
+    public static SoundManager getInstance() {
+        if(instance!= null) return instance;
+
+        instance = new SoundManager();
+
         playerManager.registerSourceManager(new YoutubeAudioSourceManager(true, new Web(), new Music(), new MusicWithThumbnail(), new AndroidLite()));
 
         playerManager.getConfiguration().setOutputFormat(COMMON_PCM_S16_BE);
         playerManager.setPlayerCleanupThreshold(TimeUnit.HOURS.toMillis(24));
         player.addListener(QUEUE_SCHEDULER);
-        setVolume(75);
+        player.setVolume(75);
+
+        return instance;
     }
 
     public static void shutdown() {
@@ -132,7 +136,7 @@ public class SoundManager {
             player.setPaused(true);
             pipeline.pauseOutputLine();
             EventManager.pushEvent(
-                    new PauseEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+                    new PauseEvent(player.getPlayingTrack()));
 
             Console.info("Paused.");
         }
@@ -143,7 +147,7 @@ public class SoundManager {
             player.setPaused(false);
             pipeline.resumeOutputLine();
             EventManager.pushEvent(
-                    new ResumeEvent(Main.SOUND_MANAGER, player.getPlayingTrack()));
+                    new ResumeEvent( player.getPlayingTrack()));
 
             Console.info("Resumed.");
         }
@@ -162,7 +166,7 @@ public class SoundManager {
         if (lastTrack != null) {
             lastTrack.setPosition(player.getPlayingTrack().getPosition());
             EventManager.pushEvent(
-                    new TrackEndEvent(Main.SOUND_MANAGER, lastTrack, AudioTrackEndReason.STOPPED));
+                    new TrackEndEvent(lastTrack, AudioTrackEndReason.STOPPED));
         }
         player.stopTrack();
         pipeline.shutdownThread(); // be careful

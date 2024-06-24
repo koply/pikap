@@ -9,8 +9,7 @@ public class TrackEndEvent extends AudioEvent {
     public final AudioTrack endTrack;
     public final AudioTrackEndReason reason;
 
-    public TrackEndEvent(SoundManager soundManager, AudioTrack track, AudioTrackEndReason reason) {
-        super(soundManager);
+    public TrackEndEvent(AudioTrack track, AudioTrackEndReason reason) {
         this.endTrack = track;
         this.reason = reason;
     }
