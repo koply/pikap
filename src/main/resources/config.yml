@@ -1,6 +1,7 @@
+# Performs detailed logging
 debug: false
 
-# Default sqlite. just set it to false to disable it
+# Database Backend
 # Possible selections: sqlite, disable
 db: sqlite
 
@@ -11,7 +12,7 @@ db_file: data.db
 search_limitor: -1
 
 # Record tracks
-record: true
+record: false
 
 # Recorded sounds folder
 rec_folder: ./recs/
@@ -19,5 +20,5 @@ rec_folder: ./recs/
 # Item count per pages in queue command
 queue_pager: 8
 
-# Maximum volume
-maximum_volume: 150
+# Maximum volume, sound distortion may occur when the volume is above 100
+maximum_volume: 100
