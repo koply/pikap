@@ -82,8 +82,4 @@ public class EventManager {
             });
         }
     }
-
-    public static void debugListeners() {
-        Console.info(listeners.size()  + " (listeners size) - " + listeners.get(PlayEvent.class).size() + " (total PlayEvent listener count) EventManager#debugListeners()");
-    }
 }
