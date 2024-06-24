@@ -8,3 +8,5 @@ dependency-reduced-pom.xml
 ./*.db
 *.log
 *.iml
+config.yml
+data.db
