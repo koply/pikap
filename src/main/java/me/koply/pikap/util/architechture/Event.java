@@ -1,4 +1,4 @@
-package me.koply.pikap.event;
+package me.koply.pikap.util.architechture;
 
 public interface Event {
     boolean isCancellable();

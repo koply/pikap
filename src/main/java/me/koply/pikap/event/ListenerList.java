@@ -1,5 +1,7 @@
 package me.koply.pikap.event;
 
+import me.koply.pikap.util.architechture.Observer;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,9 +21,9 @@ class ListenerList {
         listeners = copy;
     }
 
-    public synchronized void removeListener(Listener listener) {
+    public synchronized void removeListener(Observer observer) {
         List<EventReflectionData> copy = new ArrayList<>(listeners);
-        copy.removeIf(data -> data.getListener() == listener);
+        copy.removeIf(data -> data.getListener() == observer);
         copy.sort(Comparator.comparingInt(EventReflectionData::getPriority));
         listeners = copy;
     }

@@ -1,5 +1,9 @@
 package me.koply.pikap.event;
 
+import me.koply.pikap.util.architechture.Event;
+import me.koply.pikap.util.architechture.Observable;
+import me.koply.pikap.util.architechture.Observer;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -8,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 // internal event methods
-public class EventPublisher {
+public class EventPublisher implements Observable {
 
     public final Executor executor = Executors.newSingleThreadExecutor();
 
@@ -20,10 +24,9 @@ public class EventPublisher {
         if (instance == null) instance = new EventPublisher();
         return instance;
     }
-
-    public void registerListener(Listener listener) {
-
-        Arrays.stream(listener.getClass().getDeclaredMethods())
+    @Override
+    public void addObserver(Observer observer) {
+        Arrays.stream(observer.getClass().getDeclaredMethods())
                 .filter( method -> method.isAnnotationPresent(EventHandler.class) )
                 .forEach( method -> {
                     EventHandler handler = method.getDeclaredAnnotation(EventHandler.class);
@@ -38,12 +41,13 @@ public class EventPublisher {
 
                     ListenerList listeners = getListenerList(parameterClazz);
 
-                    listeners.add(new EventReflectionData(method, listener, handler.priority()));
+                    listeners.add(new EventReflectionData(method, observer, handler.priority()));
                 });
     }
 
-    public void removeListener(Listener listener) {
-        registeredListeners.values().forEach((list) -> list.removeListener(listener));
+    @Override
+    public void removeObserver(Observer observer) {
+        registeredListeners.values().forEach((list) -> list.removeListener(observer));
     }
 
     public void publishEvent(Event event) {

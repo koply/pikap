@@ -1,6 +1,6 @@
 package me.koply.pikap.api.cli.command;
 
-import me.koply.pikap.event.Event;
+import me.koply.pikap.util.architechture.Event;
 
 public class CommandEvent implements Event {
 
