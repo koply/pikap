@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
+@Deprecated
 public class ConfigManager extends LightYML {
 
     // maybe hot changes from commands

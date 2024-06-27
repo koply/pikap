@@ -3,6 +3,8 @@ package me.koply.pikap.util;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+// Switch to Files classes.
+@Deprecated
 public class FileUtil {
 
     public static String readFile(File file) {

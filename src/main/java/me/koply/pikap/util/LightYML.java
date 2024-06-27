@@ -3,6 +3,7 @@ package me.koply.pikap.util;
 import java.io.*;
 import java.util.HashMap;
 
+@Deprecated
 public class LightYML extends HashMap<String, String> {
 
     public LightYML() {

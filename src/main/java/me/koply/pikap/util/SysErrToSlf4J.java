@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+@Deprecated
 public class SysErrToSlf4J extends OutputStream {
 
     public static void redirectSysErr(Logger logger) {
