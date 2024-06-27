@@ -1,4 +1,4 @@
-package me.koply.pikap.config;
+package me.koply.pikap.util;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class YMLReader {
-    public static Map<String, String> readToMap(Path path) {
+    public static Map<String, String> read(Path path) {
 
         final Map<String, String> map = new HashMap<>();
         mapTo(path, map);
