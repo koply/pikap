@@ -10,6 +10,7 @@ net-oneandone-reflections8-reflections8 = "0.11.7"
 org-slf4j-slf4j-simple = "1.7.21"
 org-xerial-sqlite-jdbc = "3.46.0.0"
 com-github-jognrengelman-shadow = "8.1.1"
+com-google-dagger = "2.51.+"
 
 [libraries]
 com-github-jncrmx-discord-game-sdk4j = { module = "com.github.JnCrMx:discord-game-sdk4j", version.ref = "com-github-jncrmx-discord-game-sdk4j" }
@@ -22,6 +23,8 @@ dev-lavalink-youtube-v2 = { module = "dev.lavalink.youtube:v2", version.ref = "d
 net-oneandone-reflections8-reflections8 = { module = "net.oneandone.reflections8:reflections8", version.ref = "net-oneandone-reflections8-reflections8" }
 org-slf4j-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "org-slf4j-slf4j-simple" }
 org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
+com-google-dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger"}
+com-google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger"}
 
 [plugins]
 com-github-johnrengelman-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "com-github-jognrengelman-shadow" }
