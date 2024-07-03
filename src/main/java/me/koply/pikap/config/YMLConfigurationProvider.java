@@ -1,7 +1,6 @@
 package me.koply.pikap.config;
 
 import me.koply.pikap.util.YMLReader;
-import me.koply.pikap.util.architechture.Observable;
 import me.koply.pikap.util.architechture.Observer;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class YMLConfigurationProvider implements ConfigurationProvider, Observable {
+public class YMLConfigurationProvider implements ConfigurationProvider {
 
     private final Path configurationPath;
 
