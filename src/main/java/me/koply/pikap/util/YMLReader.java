@@ -3,18 +3,10 @@ package me.koply.pikap.util;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 
 public class YMLReader {
-    public static Map<String, String> read(Path path) {
-
-        final Map<String, String> map = new HashMap<>();
-        mapTo(path, map);
-        return map;
-    }
-
-    public static void mapTo(Path path, Map<String, String> map) {
+    public static boolean readTo(Path path, Map<String, String> map) {
         try (BufferedReader reader = Files.newBufferedReader(path)){
             String line;
             while ((line = reader.readLine()) != null) {
@@ -23,7 +15,9 @@ public class YMLReader {
                 map.put(split[0].trim(), split[1].trim());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 }

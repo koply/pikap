@@ -3,6 +3,8 @@ package me.koply.pikap.config;
 import me.koply.pikap.util.YMLReader;
 import me.koply.pikap.util.architechture.Observer;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -12,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+@Singleton
 public class YMLConfigurationProvider implements ConfigurationProvider {
 
     private final Path configurationPath;
@@ -19,16 +22,16 @@ public class YMLConfigurationProvider implements ConfigurationProvider {
     private final Map<String, String> dataMap = new ConcurrentHashMap<>();
     private final Set<Observer> observers = new CopyOnWriteArraySet<>();
 
-    public YMLConfigurationProvider(Path configurationPath) {
-        this.configurationPath = configurationPath;
-        YMLReader.mapTo(configurationPath, dataMap);
+    @Inject
+    public YMLConfigurationProvider(String fileName) {
+        this.configurationPath = Path.of(fileName);
     }
 
     @Override
     public void createDefault() {
         if(Files.exists(configurationPath)) return;
 
-        String name = configurationPath.getFileName().toString();
+        String name = "/" + configurationPath;
         try(InputStream stream = this.getClass().getResourceAsStream(name)) {
             if (stream == null) throw new IOException("File " + name + " not found in resources!");
             Files.copy(stream, configurationPath);
@@ -41,7 +44,7 @@ public class YMLConfigurationProvider implements ConfigurationProvider {
     @Override
     public void load() {
         dataMap.clear();
-        YMLReader.mapTo(configurationPath, dataMap);
+        YMLReader.readTo(configurationPath, dataMap);
         observers.forEach(Observer::update);
     }
 
@@ -58,5 +61,10 @@ public class YMLConfigurationProvider implements ConfigurationProvider {
     @Override
     public void removeObserver(Observer observer) {
         observers.remove(observer);
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return !dataMap.isEmpty();
     }
 }

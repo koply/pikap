@@ -5,11 +5,7 @@ import me.koply.pikap.database.model.*;
 import java.util.List;
 import java.util.Map;
 
-public interface Database {
-
-    boolean connect(Map<String, String> config);
-    void close();
-    boolean isFileDB();
+public interface DatabaseAccessObject {
 
     void createTrack(Track track);
     void createTrackIfNotExists(Track track);

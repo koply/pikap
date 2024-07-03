@@ -14,7 +14,7 @@ public class SessionData {
     }
 
     public void registerListener() {
-        EventPublisher.getInstance().registerListener(sessionEventListener);
+        EventPublisher.getInstance().addObserver(sessionEventListener);
     }
 
     private State currentState = State.IDLE; // getter, setter

@@ -7,7 +7,7 @@ import com.j256.ormlite.jdbc.db.SqliteDatabaseType;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import me.koply.pikap.api.cli.Console;
-import me.koply.pikap.database.api.Database;
+import me.koply.pikap.database.api.DatabaseAccessObject;
 import me.koply.pikap.database.model.*;
 import me.koply.pikap.util.Util;
 
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class SqliteDB implements Database {
+public class SqliteDAO implements DatabaseAccessObject {
 
     private ConnectionSource connectionSource;
 
@@ -25,29 +25,6 @@ public class SqliteDB implements Database {
 
     private Dao<PlayedPlaylist, Integer> playedPlaylists;
     private Dao<Playlist, Integer> playlists;
-
-    @Override
-    public boolean connect(Map<String, String> config) {
-        String dataFilePath = config.getOrDefault("db_file", "data_" + Util.getDateForFileName() + ".db");
-
-        if (!config.containsKey("db_file")) {
-            Console.info("The db_file entry couldn't found in the config file. Fallback database file is: " + dataFilePath);
-        }
-
-        String connectionUrl = "jdbc:sqlite:" + dataFilePath;
-
-        try {
-            connectionSource = new JdbcConnectionSource(connectionUrl, new SqliteDatabaseType());
-            initializeDaos(connectionSource);
-
-            Console.debugLog("Database connection established");
-            return true;
-        } catch (SQLException ex) {
-            Console.debugLog("An error occur while connection to the database.");
-            ex.printStackTrace();
-            return false;
-        }
-    }
 
     private void initializeDaos(ConnectionSource connectionSource) throws SQLException {
         tracks = createDaoAndTableIfNotExists(connectionSource, Track.class);

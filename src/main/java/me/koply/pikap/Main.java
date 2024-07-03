@@ -8,8 +8,8 @@ import me.koply.pikap.commands.TrackControlCommands;
 import me.koply.pikap.config.ConfigManager;
 import me.koply.pikap.database.PikapAudioListener;
 import me.koply.pikap.database.api.DBFactory;
-import me.koply.pikap.database.api.Database;
-import me.koply.pikap.database.branch.Databases;
+import me.koply.pikap.database.api.DatabaseAccessObject;
+import me.koply.pikap.database.branch.DatabaseType;
 import me.koply.pikap.discord.DiscordRPC;
 import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.keyhook.KeyboardListener;
@@ -36,7 +36,7 @@ public class Main {
     private static final KeyboardListener KEY_LISTENER = new KeyboardListener();
     private static final CommandHandler COMMAND_HANDLER = new CommandHandler(HelpCommand.class.getPackageName());
 
-    private static Database repository;
+    private static DatabaseAccessObject repository;
 
     // hello world, ConfigManager initialization, database initialization, SoundManager initialization, SessionDataStore initialization
     public static void main(String[] args) {
@@ -48,7 +48,7 @@ public class Main {
             System.exit(1);
         }
 
-        Databases selectedDatabase = Databases.fromName(CONFIG.getOrDefault("db", ""));
+        DatabaseType selectedDatabase = DatabaseType.fromName(CONFIG.getOrDefault("db", ""));
         if (selectedDatabase == null) {
             Console.debugLog("Database not selected.");
         } else {
@@ -58,7 +58,7 @@ public class Main {
                 Console.warn("PANIC! Database connection isn't established. Check the credentials/file identifies.");
                 return;
             } else {
-                EventPublisher.getInstance().registerListener(new PikapAudioListener(repository));
+                EventPublisher.getInstance().addObserver(new PikapAudioListener(repository));
             }
         }
 
@@ -78,7 +78,7 @@ public class Main {
         }
 
         if (CONFIG.isDebug()) {
-            EventPublisher.getInstance().registerListener(new AudioAudioDebugger());
+            EventPublisher.getInstance().addObserver(new AudioAudioDebugger());
         }
         // EventManager.debugListeners();
 
@@ -92,7 +92,7 @@ public class Main {
         System.exit(0);
     }
 
-    public static Database getRepository() {
+    public static DatabaseAccessObject getRepository() {
         return repository;
     }
 }

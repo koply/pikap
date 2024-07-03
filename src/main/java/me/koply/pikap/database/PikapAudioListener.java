@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.event.*;
-import me.koply.pikap.database.api.Database;
+import me.koply.pikap.database.api.DatabaseAccessObject;
 import me.koply.pikap.database.model.PlayedPlaylist;
 import me.koply.pikap.database.model.Playlist;
 import me.koply.pikap.database.model.Track;
@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class PikapAudioListener extends AudioListenerAdapter {
 
-    private final Database db;
-    public PikapAudioListener(Database db) {
+    private final DatabaseAccessObject db;
+    public PikapAudioListener(DatabaseAccessObject db) {
         this.db = db;
     }
 

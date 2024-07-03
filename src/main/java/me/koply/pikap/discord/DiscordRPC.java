@@ -42,7 +42,7 @@ public class DiscordRPC implements Runnable {
     public void loadAsync() {
         rpcThread = new Thread(this);
         rpcThread.start();
-        EventPublisher.getInstance().registerListener(listener);
+        EventPublisher.getInstance().addObserver(listener);
     }
 
     public void close() {
@@ -50,7 +50,7 @@ public class DiscordRPC implements Runnable {
             core.close();
             rpcThread.interrupt();
             rpcThread = null;
-            EventPublisher.getInstance().registerListener(listener);
+            EventPublisher.getInstance().addObserver(listener);
         } catch (Exception ignored) {
         }
     }

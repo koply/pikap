@@ -43,7 +43,7 @@ java {
 }
 
 application {
-    mainClass = "me.koply.pikap.Main"
+    mainClass = "me.koply.pikap.Application"
     applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
 }
 

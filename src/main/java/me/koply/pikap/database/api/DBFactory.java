@@ -1,18 +1,18 @@
 package me.koply.pikap.database.api;
 
-import me.koply.pikap.database.branch.Databases;
-import me.koply.pikap.database.branch.SqliteDB;
+import me.koply.pikap.database.branch.DatabaseType;
+import me.koply.pikap.database.branch.SqliteDAO;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class DBFactory {
 
-    public static Database create(Databases choice) {
+    public static DatabaseAccessObject create(DatabaseType choice) {
         try {
             return choice.repositoryClass.getDeclaredConstructor().newInstance();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
             ex.printStackTrace();
-            return new SqliteDB();
+            return new SqliteDAO();
         }
     }
 }
