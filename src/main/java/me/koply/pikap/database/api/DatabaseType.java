@@ -1,6 +1,6 @@
-package me.koply.pikap.database.branch;
+package me.koply.pikap.database.api;
 
-import me.koply.pikap.database.api.DatabaseAccessObject;
+import me.koply.pikap.database.dao.SqliteDAO;
 
 // TODO: Change it to AOP style with class annotation
 public enum DatabaseType {

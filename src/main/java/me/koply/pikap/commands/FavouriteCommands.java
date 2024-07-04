@@ -63,7 +63,7 @@ public class FavouriteCommands implements CLICommand {
             return;
         }
 
-        Track dbtrack = Main.getRepository().queryTrackByIdentifier(track.getIdentifier());
+        Track dbtrack = Main.getRepository().fetchTrackAsync(track.getIdentifier());
         FavouriteTrack favouriteTrack = Main.getRepository().queryFavouriteByTrackId(dbtrack.getId());
         if (favouriteTrack == null) {
             favouriteTrack = new FavouriteTrack(dbtrack);

@@ -1,7 +1,6 @@
 package me.koply.pikap.database.api;
 
-import me.koply.pikap.database.branch.DatabaseType;
-import me.koply.pikap.database.branch.SqliteDAO;
+import me.koply.pikap.database.dao.SqliteDAO;
 
 import java.lang.reflect.InvocationTargetException;
 
