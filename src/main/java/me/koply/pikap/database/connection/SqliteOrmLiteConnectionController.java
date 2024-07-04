@@ -7,12 +7,12 @@ import me.koply.pikap.api.cli.Console;
 
 import java.sql.SQLException;
 
-public class SqliteConnectionController implements ConnectionController {
+public class SqliteOrmLiteConnectionController implements OrmLiteConnectionController {
 
     private final String connectionUrl ;
     private ConnectionSource connectionSource;
 
-    public SqliteConnectionController(String databaseFilePath) {
+    public SqliteOrmLiteConnectionController(String databaseFilePath) {
         this.connectionUrl = "jdbc:sqlite:" + databaseFilePath;
     }
 

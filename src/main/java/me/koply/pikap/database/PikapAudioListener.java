@@ -90,9 +90,9 @@ public class PikapAudioListener extends AudioListenerAdapter {
     @Override
     public void onNextTrack(NextTrackEvent e) {
         if (e.reason == NextTrackEvent.Reason.NEXT && e.pastTrack != null) {
-            Track pastTrack = db.queryTrackByIdentifier(e.pastTrack.getIdentifier());
+            Track pastTrack = db.fetchTrackAsync(e.pastTrack.getIdentifier());
             pastTrack.setLastMillis(e.pastTrack.getPosition());
-            db.updateTrack(pastTrack);
+            db.updateTrackAsync(pastTrack);
         }
         saveNewTrack(e.nextTrack, true, null);
     }
@@ -100,23 +100,23 @@ public class PikapAudioListener extends AudioListenerAdapter {
     @EventHandler
     @Override
     public void onTrackEnd(TrackEndEvent e) {
-        Track track = db.queryTrackByIdentifier(e.endTrack.getIdentifier());
+        Track track = db.fetchTrackAsync(e.endTrack.getIdentifier());
         if (track == null) return;
         track.setLastMillis(e.endTrack.getPosition());
-        db.updateTrack(track);
+        db.updateTrackAsync(track);
     }
 
     @EventHandler
     @Override
     public void onPause(PauseEvent e) {
-        Track track = db.queryTrackByIdentifier(e.track.getIdentifier());
+        Track track = db.fetchTrackAsync(e.track.getIdentifier());
         if (track == null) return;
         track.setLastMillis(e.track.getPosition());
-        db.updateTrack(track);
+        db.updateTrackAsync(track);
     }
 
     private Track saveNewTrack(AudioTrack audioTrack, boolean isPlayed, Integer playlistId) {
-        Track track = db.queryTrackByIdentifier(audioTrack.getIdentifier());
+        Track track = db.fetchTrackAsync(audioTrack.getIdentifier());
         boolean create = false;
         if (track == null) {
             track = new Track(audioTrack.getInfo());
@@ -137,8 +137,8 @@ public class PikapAudioListener extends AudioListenerAdapter {
             if (create) track.setFirstPlayed(track.getLastPlayed());
         }
 
-        if (create) db.createTrack(track);
-        else db.updateTrack(track);
+        if (create) db.insertTrackAsync(track);
+        else db.updateTrackAsync(track);
         return track;
     }
 }

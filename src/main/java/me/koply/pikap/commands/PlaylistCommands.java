@@ -77,7 +77,7 @@ public class PlaylistCommands implements CLICommand {
                 Console.println("Playlist members not found?");
                 return false;
             }
-            Track firstTrack = Main.getRepository().queryTrackById(ids[0]);
+            Track firstTrack = Main.getRepository().fetchTrackAsync(ids[0]);
             String url = Constants.YT_URL_PREFIX + firstTrack.getIdentifier() + "&list=" + playlistYoutubeIdentifier + "&index=1";
             PlayQueryData data = new PlayQueryData(url, false, true, false, false);
             data.setFromPl(true);
