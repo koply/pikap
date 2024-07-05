@@ -1,6 +1,5 @@
 package me.koply.pikap.config;
 
-import me.koply.pikap.Constants;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.util.StringUtil;
@@ -10,6 +9,8 @@ import me.koply.pikap.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 public class ConfigManager extends LightYML {
 
@@ -22,11 +23,9 @@ public class ConfigManager extends LightYML {
 
     public void createDefault() {
         if (Main.resetConfig|| !FileUtil.isFile(file)) {
-            try {
-                File defaultConfig = new File(Main.class.getResource("/config.yml").getFile());
-                file.createNewFile();
-
-                FileUtil.writeFile(file, FileUtil.readFile(defaultConfig));
+            try(InputStream ioStream = this.getClass().getResourceAsStream("/config.yml")) {
+                if (ioStream == null) throw new IOException("config.yml not found!");
+                Files.copy(ioStream, file.toPath());
             } catch (IOException ex) {
                 ex.printStackTrace();
                 Console.warn("PANIC! config.yml file couldn't created/writed.");
