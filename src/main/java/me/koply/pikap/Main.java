@@ -7,14 +7,13 @@ import me.koply.pikap.commands.HelpCommand;
 import me.koply.pikap.commands.TrackControlCommands;
 import me.koply.pikap.config.ConfigManager;
 import me.koply.pikap.database.PikapAudioListener;
-import me.koply.pikap.database.api.DBFactory;
-import me.koply.pikap.database.api.DatabaseType;
 import me.koply.pikap.discord.DiscordRPC;
 import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.keyhook.KeyboardListener;
 import me.koply.pikap.session.SessionData;
 import me.koply.pikap.sound.recorder.RecordedTracksManager;
 import me.koply.pikap.test.AudioAudioDebugger;
+
 
 public class Main {
 

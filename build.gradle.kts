@@ -29,6 +29,9 @@ dependencies {
     implementation(libs.com.google.dagger.dagger)
     annotationProcessor(libs.com.google.dagger.compiler)
 
+    compileOnly(libs.org.projectlombok.lombok)
+    annotationProcessor(libs.org.projectlombok.lombok)
+
     // TERMINAL
     implementation(libs.com.github.tomas.langer.chalk)
 

@@ -8,4 +8,5 @@ public interface ConfigurationProvider extends Observable {
     boolean isLoaded();
     void load();
     String get(String key);
+    String getOrDefault(String key, String defaultValue);
 }

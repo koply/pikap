@@ -59,7 +59,9 @@ public class Track {
         this(info.title, info.author, info.length, info.identifier);
     }
 
-    public Track() { }
+    public Track() {
+        this("", "", 0, null);
+    }
 
     public int getId() {
         return id;

@@ -17,6 +17,7 @@ public class ObserverDelegate<T> implements Observer, Delegate<T> {
         data = loadSupplier.get();
     }
 
+    @Override
     public synchronized T get() {
         return data;
     }

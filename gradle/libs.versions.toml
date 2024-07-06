@@ -11,6 +11,8 @@ org-slf4j-slf4j-simple = "1.7.21"
 org-xerial-sqlite-jdbc = "3.46.0.0"
 com-github-jognrengelman-shadow = "8.1.1"
 com-google-dagger = "2.51.+"
+org-projectlombok-lombok = "1.18.34"
+
 
 [libraries]
 com-github-jncrmx-discord-game-sdk4j = { module = "com.github.JnCrMx:discord-game-sdk4j", version.ref = "com-github-jncrmx-discord-game-sdk4j" }
@@ -25,6 +27,7 @@ org-slf4j-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "org
 org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
 com-google-dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger"}
 com-google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger"}
+org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 
 [plugins]
 com-github-johnrengelman-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "com-github-jognrengelman-shadow" }

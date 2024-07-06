@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Supplier;
 
 @Singleton
 public class YMLConfigurationProvider implements ConfigurationProvider {
@@ -54,6 +55,11 @@ public class YMLConfigurationProvider implements ConfigurationProvider {
     }
 
     @Override
+    public String getOrDefault(String key, String defaultValue) {
+        return dataMap.getOrDefault(key, defaultValue);
+    }
+
+    @Override
     public void addObserver(Observer observer) {
         observers.add(observer);
     }
@@ -67,4 +73,5 @@ public class YMLConfigurationProvider implements ConfigurationProvider {
     public boolean isLoaded() {
         return !dataMap.isEmpty();
     }
+
 }
