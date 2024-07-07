@@ -3,6 +3,7 @@ package me.koply.pikap.database.dao;
 import me.koply.pikap.database.connection.OrmLiteConnectionController;
 import me.koply.pikap.database.model.Playlist;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 public class PlaylistDAO extends AsyncDataAccessObjectOrmLite<Playlist>{
@@ -11,4 +12,7 @@ public class PlaylistDAO extends AsyncDataAccessObjectOrmLite<Playlist>{
         super(connectionController, clazz, executorService);
     }
 
+    public CompletableFuture<Playlist> fetchIdentifierAsync(String identifier) {
+        return super.fetchWhereAsync("identifier", identifier);
+    }
 }

@@ -1,39 +1,84 @@
 package me.koply.pikap;
 
-
+import lombok.Getter;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.config.ConfigurationProvider;
 import me.koply.pikap.config.YMLConfigurationProvider;
-import me.koply.pikap.database.DatabaseAccessObject;
+import me.koply.pikap.database.*;
+import me.koply.pikap.database.connection.DisabledOrmLiteConnectionController;
+import me.koply.pikap.database.connection.OrmLiteConnectionController;
+import me.koply.pikap.database.connection.SqliteOrmLiteConnectionController;
+import me.koply.pikap.database.model.DatabaseAccessor;
+import me.koply.pikap.event.EventPublisher;
 
 public class Application {
 
     public static final String VERSION = "0.2.0-beta";
 
+    @Getter
+    private static Application instance;
+
     public static void main(String[] args) {
-        new Application();
+        instance = new Application();
     }
 
+    @Getter
     private final ConfigurationProvider configurationProvider;
+
+    @Getter
+    private final DatabaseAccessDelegate databaseAccessDelegate;
 
     public Application() {
         // Configuration
         configurationProvider = new YMLConfigurationProvider("config.yml");
         configurationProvider.createDefault();
-        configurationProvider.load();
 
+        databaseAccessDelegate = createDatabaseAccessDelegate();
+
+        configurationProvider.load();
         if(!configurationProvider.isLoaded()) {
             Console.warn(Constants.PREFIX + "An error has occurred while loading the configuration file!");
             System.exit(1);
         }
 
-        // check config.get("db") disable or sqlite
-        DatabaseAccessObject databaseAccessObject = new DatabaseAccessObject();
+        // null check when DisabledOrmLiteConnectionController
+        // if null we don't need a listener
+        if (databaseAccessDelegate.get() != null) {
+            AudioEventListenerForDatabase listener = new AudioEventListenerForDatabase(databaseAccessDelegate);
+            EventPublisher.getInstance().addObserver(listener);
+        }
 
 
 
-        configurationProvider.addObserver(databaseAccessObject);
+    }
 
+    private DatabaseAccessDelegate createDatabaseAccessDelegate() {
+        DatabaseConfigurationDelegate databaseConfigurationDelegate = new DatabaseConfigurationDelegate(() ->
+                new DatabaseConfiguration(configurationProvider.get("db"), configurationProvider.get("db_file")));
+        databaseConfigurationDelegate.registerSelf(configurationProvider);
 
+        DatabaseDelegate databaseDelegate = new DatabaseDelegate(() -> {
+            DatabaseConfiguration configuration = databaseConfigurationDelegate.get();
+            if (configuration.getDatabase().equalsIgnoreCase("sqlite")) {
+                return new SqliteOrmLiteConnectionController(configuration.getDatabaseFile());
+            } else {
+                // TODO: Better logging.
+                Console.info("Database is not supported: " + configuration.getDatabase());
+                return new DisabledOrmLiteConnectionController();
+            }
+        });
+
+        databaseConfigurationDelegate.addObserver(databaseDelegate);
+
+        DatabaseAccessDelegate databaseAccessDelegate = new DatabaseAccessDelegate(() -> {
+            OrmLiteConnectionController controller = databaseDelegate.get();
+            if (controller instanceof DisabledOrmLiteConnectionController) {
+                return null; // Investigate, is it ok?
+            }
+            return new DatabaseAccessor(controller);
+        });
+
+        databaseDelegate.addObserver(databaseAccessDelegate);
+        return databaseAccessDelegate;
     }
 }

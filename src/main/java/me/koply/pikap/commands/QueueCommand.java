@@ -1,15 +1,20 @@
 package me.koply.pikap.commands;
 
 import com.github.tomaslanger.chalk.Ansi;
+import com.github.tomaslanger.chalk.Chalk;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import me.koply.pikap.Application;
+import me.koply.pikap.Constants;
 import me.koply.pikap.Main;
 import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.api.cli.command.CLICommand;
 import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.event.PlayEvent;
-import me.koply.pikap.database.api.DatabaseAccessObject;
+import me.koply.pikap.database.model.DatabaseAccessor;
+import me.koply.pikap.database.model.Track;
+import me.koply.pikap.sound.PlayQueryData;
 import me.koply.pikap.sound.SoundManager;
 import me.koply.pikap.util.OutputPager;
 import me.koply.pikap.util.Util;
@@ -40,12 +45,15 @@ public class QueueCommand implements CLICommand {
 
             int queuePager = Main.CONFIG.getQueuePager();
             int i = 1;
+            long totalDuration = 0;
             if (queue.size() < queuePager+2) { // single page
                 for (AudioTrack track : queue) {
                     i = getLine(sb, i, track);
+                    totalDuration += track.getDuration();
 
                     if (i-1 != queue.size()) sb.append("\n");
                 }
+                Console.println("Remaining tracks: " + Chalk.on(queue.size()+"").blue() + ", Total duration: " + Chalk.on(Util.formatMilliSecond(totalDuration)).blue());
                 Console.println(sb.toString());
             } else { // paging
                 List<String> pages = new ArrayList<>();
@@ -80,15 +88,24 @@ public class QueueCommand implements CLICommand {
         // TODO - last with numbers for played previously
         AudioTrack last = SESSION.popLastTrack();
         if (last == null) {
-            DatabaseAccessObject db = Main.getRepository();
-            if (db == null) {
+            DatabaseAccessor accessor = Application.getInstance().getDatabaseAccessDelegate().get();
+            if (accessor == null) {
+                return;
             }
-            // TODO get last from db
+
+            accessor.getTrackDAO().fetchLastPlayedAsync().thenAccept(this::_playTrack);
         } else {
             last = last.makeClone();
             SoundManager.getQueueScheduler().play(last, PlayEvent.Reason.PLAY_LAST);
         }
+    }
 
+    private void _playTrack(Track track) {
+        String url = Constants.YT_URL_PREFIX + track.getIdentifier();
+        PlayQueryData data = new PlayQueryData(url, true, false, false, false);
+        data.setFromPf(true);
+        data.setKnownName(track.getTitle());
+        soundManager.playTrack(data);
     }
 
 }

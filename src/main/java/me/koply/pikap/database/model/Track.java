@@ -3,9 +3,13 @@ package me.koply.pikap.database.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @DatabaseTable(tableName = "tracks")
 public class Track {
 
@@ -63,41 +67,6 @@ public class Track {
         this("", "", 0, null);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Track setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public Track setAuthor(String author) {
-        this.author = author;
-        return this;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public Track setIdentifier(String identifier) {
-        this.identifier = identifier;
-        return this;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
     public Track setDuration(long duration) {
         this.duration = duration;
         return this;
@@ -107,35 +76,4 @@ public class Track {
         listenedTimes++;
     }
 
-    public int getListenedTimes() {
-        return listenedTimes;
-    }
-
-    public void setListenedTimes(int listenedTimes) {
-        this.listenedTimes = listenedTimes;
-    }
-
-    public long getLastMillis() {
-        return lastMillis;
-    }
-
-    public void setLastMillis(long lastMillis) {
-        this.lastMillis = lastMillis;
-    }
-
-    public Timestamp getLastPlayed() {
-        return lastPlayed;
-    }
-
-    public void setLastPlayed(Timestamp lastPlayed) {
-        this.lastPlayed = lastPlayed;
-    }
-
-    public Timestamp getFirstPlayed() {
-        return firstPlayed;
-    }
-
-    public void setFirstPlayed(Timestamp firstPlayed) {
-        this.firstPlayed = firstPlayed;
-    }
 }

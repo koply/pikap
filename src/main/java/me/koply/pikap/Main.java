@@ -6,7 +6,7 @@ import me.koply.pikap.api.cli.command.CommandHandler;
 import me.koply.pikap.commands.HelpCommand;
 import me.koply.pikap.commands.TrackControlCommands;
 import me.koply.pikap.config.ConfigManager;
-import me.koply.pikap.database.PikapAudioListener;
+import me.koply.pikap.database.AudioEventListenerForDatabase;
 import me.koply.pikap.discord.DiscordRPC;
 import me.koply.pikap.event.EventPublisher;
 import me.koply.pikap.keyhook.KeyboardListener;
@@ -56,7 +56,7 @@ public class Main {
                 Console.warn("PANIC! Database connection isn't established. Check the credentials/file identifies.");
                 return;
             } else {
-                EventPublisher.getInstance().addObserver(new PikapAudioListener(repository));
+                EventPublisher.getInstance().addObserver(new AudioEventListenerForDatabase(repository));
             }
         }
 
