@@ -1,18 +1,19 @@
-package me.koply.pikap.database.connection;
+package me.koply.pikap.database.ormlite;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.db.SqliteDatabaseType;
 import com.j256.ormlite.support.ConnectionSource;
 import me.koply.pikap.api.cli.Console;
+import me.koply.pikap.database.connection.ConnectionController;
 
 import java.sql.SQLException;
 
-public class SqliteOrmLiteConnectionController implements OrmLiteConnectionController {
+public class SqliteConnectionController implements ConnectionController<ConnectionSource> {
 
     private final String connectionUrl ;
     private ConnectionSource connectionSource;
 
-    public SqliteOrmLiteConnectionController(String databaseFilePath) {
+    public SqliteConnectionController(String databaseFilePath) {
         this.connectionUrl = "jdbc:sqlite:" + databaseFilePath;
     }
 

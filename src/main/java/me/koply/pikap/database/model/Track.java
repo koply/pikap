@@ -25,26 +25,8 @@ public class Track {
     @DatabaseField private long lastMillis; // it'll be 0 if there is no remaining part
     @DatabaseField private Timestamp lastPlayed;
     @DatabaseField private Timestamp firstPlayed;
+    @DatabaseField private boolean favourite;
 
-    @DatabaseField(canBeNull = true)
-    private String playlistIds;
-
-    public String getPlaylistIdsString() {
-        return playlistIds;
-    }
-
-    public int[] getPlaylistIds() {
-        String[] ids = playlistIds.split(",");
-        int[] idsArray = new int[ids.length];
-        for (int i = 0; i < ids.length; i++) {
-            idsArray[i] = Integer.parseInt(ids[i]);
-        }
-        return idsArray;
-    }
-
-    public void addPlaylistId(int id) {
-        playlistIds += "," + id;
-    }
 
     // identifier is the YouTube key of the track
     public Track(int id, String title, String author, long duration, String identifier) {
@@ -65,11 +47,6 @@ public class Track {
 
     public Track() {
         this("", "", 0, null);
-    }
-
-    public Track setDuration(long duration) {
-        this.duration = duration;
-        return this;
     }
 
     public void increaseListenedTimes() {

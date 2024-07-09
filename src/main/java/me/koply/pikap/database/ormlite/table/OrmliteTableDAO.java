@@ -1,25 +1,37 @@
-package me.koply.pikap.database.dao;
+package me.koply.pikap.database.ormlite.table;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import me.koply.pikap.database.connection.OrmLiteConnectionController;
+import me.koply.pikap.database.connection.ConnectionController;
+import me.koply.pikap.database.dao.AsyncTableAccessObject;
 
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @param <T> The object that persists in this DAO
  */
-public class AsyncDataAccessObjectOrmLite<T> extends AsyncDataAccessObject<T> {
+public abstract class OrmliteTableDAO<T> implements AsyncTableAccessObject<T>, AutoCloseable {
 
     protected final Dao<T, Integer> dao;
+    protected final ExecutorService executorService;
 
-    public AsyncDataAccessObjectOrmLite(OrmLiteConnectionController connectionController, Class<T> clazz, ExecutorService executorService) {
-        super(executorService);
+    public OrmliteTableDAO(Class<T> clazz, ConnectionController<ConnectionSource> connectionController) {
+        this(clazz, connectionController, Executors.newSingleThreadExecutor());
+    }
+
+    public OrmliteTableDAO(Class<T> clazz, ConnectionController<ConnectionSource> connectionController, ExecutorService executorService) {
+
+        Objects.requireNonNull(clazz, "Type cannot be null");
+        Objects.requireNonNull(connectionController, "ConnectionController cannot be null");
+        this.executorService = Objects.requireNonNullElseGet(executorService, Executors::newSingleThreadExecutor);
 
         Dao<T, Integer> dao = null;
 
@@ -120,5 +132,10 @@ public class AsyncDataAccessObjectOrmLite<T> extends AsyncDataAccessObject<T> {
                 throw new RuntimeException(e);
             }
         }, executorService);
+    }
+
+    @Override
+    public void close() {
+        executorService.shutdown();
     }
 }

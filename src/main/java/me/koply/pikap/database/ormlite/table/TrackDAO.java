@@ -1,15 +1,16 @@
-package me.koply.pikap.database.dao;
+package me.koply.pikap.database.ormlite.table;
 
-import me.koply.pikap.database.connection.OrmLiteConnectionController;
+import com.j256.ormlite.support.ConnectionSource;
+import me.koply.pikap.database.connection.ConnectionController;
 import me.koply.pikap.database.model.Track;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-public class TrackDAO extends AsyncDataAccessObjectOrmLite<Track> {
+public class TrackDAO extends OrmliteTableDAO<Track> {
 
-    public TrackDAO(OrmLiteConnectionController connectionController, Class<Track> clazz, ExecutorService executorService) {
+    public TrackDAO(ConnectionController<ConnectionSource> connectionController, Class<Track> clazz, ExecutorService executorService) {
         super(connectionController, clazz, executorService);
     }
 

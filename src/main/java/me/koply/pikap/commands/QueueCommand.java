@@ -12,7 +12,7 @@ import me.koply.pikap.api.cli.command.CLICommand;
 import me.koply.pikap.api.cli.command.Command;
 import me.koply.pikap.api.cli.command.CommandEvent;
 import me.koply.pikap.api.event.PlayEvent;
-import me.koply.pikap.database.model.DatabaseAccessor;
+import me.koply.pikap.database.ormlite.DAOHolder;
 import me.koply.pikap.database.model.Track;
 import me.koply.pikap.sound.PlayQueryData;
 import me.koply.pikap.sound.SoundManager;
@@ -88,7 +88,7 @@ public class QueueCommand implements CLICommand {
         // TODO - last with numbers for played previously
         AudioTrack last = SESSION.popLastTrack();
         if (last == null) {
-            DatabaseAccessor accessor = Application.getInstance().getDatabaseAccessDelegate().get();
+            DAOHolder accessor = Application.getInstance().getDatabaseAccessDelegate().get();
             if (accessor == null) {
                 return;
             }

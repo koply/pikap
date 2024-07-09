@@ -5,18 +5,26 @@ import me.koply.pikap.api.cli.Console;
 import me.koply.pikap.config.ConfigurationProvider;
 import me.koply.pikap.config.YMLConfigurationProvider;
 import me.koply.pikap.database.*;
-import me.koply.pikap.database.connection.DisabledOrmLiteConnectionController;
-import me.koply.pikap.database.connection.OrmLiteConnectionController;
-import me.koply.pikap.database.connection.SqliteOrmLiteConnectionController;
-import me.koply.pikap.database.model.DatabaseAccessor;
+import me.koply.pikap.database.ormlite.SqliteConnectionController;
+import me.koply.pikap.database.ormlite.DAOHolder;
 import me.koply.pikap.event.EventPublisher;
 
 public class Application {
 
     public static final String VERSION = "0.2.0-beta";
 
-    @Getter
-    private static Application instance;
+
+
+
+
+
+
+
+
+
+
+
+    1
 
     public static void main(String[] args) {
         instance = new Application();
@@ -60,7 +68,7 @@ public class Application {
         DatabaseDelegate databaseDelegate = new DatabaseDelegate(() -> {
             DatabaseConfiguration configuration = databaseConfigurationDelegate.get();
             if (configuration.getDatabase().equalsIgnoreCase("sqlite")) {
-                return new SqliteOrmLiteConnectionController(configuration.getDatabaseFile());
+                return new SqliteConnectionController(configuration.getDatabaseFile());
             } else {
                 // TODO: Better logging.
                 Console.info("Database is not supported: " + configuration.getDatabase());
@@ -75,7 +83,7 @@ public class Application {
             if (controller instanceof DisabledOrmLiteConnectionController) {
                 return null; // Investigate, is it ok?
             }
-            return new DatabaseAccessor(controller);
+            return new DAOHolder(controller);
         });
 
         databaseDelegate.addObserver(databaseAccessDelegate);
