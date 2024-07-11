@@ -25,10 +25,7 @@ dependencies {
     // LOGGING
     implementation(libs.org.slf4j.slf4j.simple)
 
-    // DI
-    implementation(libs.com.google.dagger.dagger)
-    annotationProcessor(libs.com.google.dagger.compiler)
-
+    // LOMBOK
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
 
@@ -41,8 +38,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 application {
