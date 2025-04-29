@@ -5,14 +5,15 @@ com-github-tomas-langer-chalk = "1.0.2"
 com-j256-ormlite-ormlite-core = "6.1"
 com-j256-ormlite-ormlite-jdbc = "6.1"
 dev-arbjerg-lavaplayer = "2.1.2"
-dev-lavalink-youtube-v2 = "1.3.0"
+dev-lavalink-youtube-v2 = "1.12.0"
 net-oneandone-reflections8-reflections8 = "0.11.7"
 org-slf4j-slf4j-simple = "1.7.21"
 org-xerial-sqlite-jdbc = "3.46.0.0"
 com-github-jognrengelman-shadow = "8.1.1"
 com-google-dagger = "2.51.+"
 org-projectlombok-lombok = "1.18.34"
-
+com-fasterxml-jackson-databind-jackson-databind = "2.15.2"
+com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = "2.15.2"
 
 [libraries]
 com-github-jncrmx-discord-game-sdk4j = { module = "com.github.JnCrMx:discord-game-sdk4j", version.ref = "com-github-jncrmx-discord-game-sdk4j" }
@@ -28,6 +29,8 @@ org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org
 com-google-dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger"}
 com-google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger"}
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
+com-fasterxml-jackson-databind-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-databind-jackson-databind" }
+com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "com-fasterxml-jackson-dataformat-jackson-dataformat-yaml" }
 
 [plugins]
 com-github-johnrengelman-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "com-github-jognrengelman-shadow" }

@@ -1,13 +1,22 @@
 plugins {
-    java
-    `maven-publish`
+    id("java")
     application
-    alias(libs.plugins.com.github.johnrengelman.shadow) apply true
 }
 
 group = "me.koply"
-version = "0.2-beta"
+version = "1.0-SNAPSHOT"
 description = "Pikap"
+
+application {
+    mainClass = "me.koply.pikap2.Main"
+    applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
+}
+
+repositories {
+    mavenCentral()
+    maven(url = "https://maven.lavalink.dev/releases/")
+    maven(url = "https://jitpack.io/")
+}
 
 dependencies {
     // REFLECTION
@@ -35,49 +44,16 @@ dependencies {
     // MISC
     implementation(libs.com.github.kwhat.jnativehook)
     implementation(libs.com.github.jncrmx.discord.game.sdk4j)
+
+    // DAGGER
+    implementation(libs.com.google.dagger.dagger)
+    implementation(libs.com.google.dagger.compiler)
+
+    // JACKSON
+    implementation(libs.com.fasterxml.jackson.databind.jackson.databind)
+    implementation(libs.com.fasterxml.jackson.dataformat.jackson.dataformat.yaml)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-application {
-    mainClass = "me.koply.pikap.Application"
-    applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
-}
-
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
-
-tasks {
-    jar {
-        manifest {
-            attributes["Implementation-Title"] = project.name
-            attributes["Implementation-Version"] = project.version
-            attributes["Manifest-Version"] = "1.0"
-            attributes["Main-Class"] = "me.koply.pikap.Main"
-        }
-    }
-
-    named<JavaExec>("run") {
-        standardInput = System.`in`
-    }
-
-    shadowJar {
-        minimize {
-            exclude(dependency(libs.org.xerial.sqlite.jdbc.get()))
-        }
-    }
-
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-    }
-
-    javadoc {
-        options.encoding = Charsets.UTF_8.name()
-    }
+tasks.test {
+    useJUnitPlatform()
 }
