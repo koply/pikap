@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface ConfigProperty {
     String description();
     String defaultValue();
+    Class<?> type();
 }

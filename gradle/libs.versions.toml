@@ -4,16 +4,18 @@ com-github-kwhat-jnativehook = "2.2.2"
 com-github-tomas-langer-chalk = "1.0.2"
 com-j256-ormlite-ormlite-core = "6.1"
 com-j256-ormlite-ormlite-jdbc = "6.1"
-dev-arbjerg-lavaplayer = "2.1.2"
-dev-lavalink-youtube-v2 = "1.12.0"
-net-oneandone-reflections8-reflections8 = "0.11.7"
-org-slf4j-slf4j-simple = "1.7.21"
+dev-arbjerg-lavaplayer = "2.2.3"
+dev-lavalink-youtube-v2 = "1.13.2"
+org-slf4j-slf4j-api = "2.0.7"
+ch-qos-logback-logback-classic = "1.5.18"
 org-xerial-sqlite-jdbc = "3.46.0.0"
 com-github-jognrengelman-shadow = "8.1.1"
 com-google-dagger = "2.51.+"
 org-projectlombok-lombok = "1.18.34"
 com-fasterxml-jackson-databind-jackson-databind = "2.15.2"
 com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = "2.15.2"
+org-jline = "3.29.0"
+org-jetbrains-annotations = "26.0.2"
 
 [libraries]
 com-github-jncrmx-discord-game-sdk4j = { module = "com.github.JnCrMx:discord-game-sdk4j", version.ref = "com-github-jncrmx-discord-game-sdk4j" }
@@ -23,14 +25,19 @@ com-j256-ormlite-ormlite-core = { module = "com.j256.ormlite:ormlite-core", vers
 com-j256-ormlite-ormlite-jdbc = { module = "com.j256.ormlite:ormlite-jdbc", version.ref = "com-j256-ormlite-ormlite-jdbc" }
 dev-arbjerg-lavaplayer = { module = "dev.arbjerg:lavaplayer", version.ref = "dev-arbjerg-lavaplayer" }
 dev-lavalink-youtube-v2 = { module = "dev.lavalink.youtube:v2", version.ref = "dev-lavalink-youtube-v2" }
-net-oneandone-reflections8-reflections8 = { module = "net.oneandone.reflections8:reflections8", version.ref = "net-oneandone-reflections8-reflections8" }
-org-slf4j-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "org-slf4j-slf4j-simple" }
+org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
+ch-qos-logback-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "ch-qos-logback-logback-classic" }
 org-xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "org-xerial-sqlite-jdbc" }
 com-google-dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "com-google-dagger"}
 com-google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "com-google-dagger"}
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 com-fasterxml-jackson-databind-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-databind-jackson-databind" }
 com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "com-fasterxml-jackson-dataformat-jackson-dataformat-yaml" }
+org-jline = { module = "org.jline:jline", version.ref = "org-jline" }
+org-jline-jline-terminal-jansi = { module = "org.jline:jline-terminal-jansi", version.ref = "org-jline" }
+org-jline-jline-console = { module = "org.jline:jline-console", version.ref = "org-jline" }
+org-jline-jline-console-ui = { module = "org.jline:jline-console-ui", version.ref = "org-jline" }
+org-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "org-jetbrains-annotations" }
 
 [plugins]
 com-github-johnrengelman-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "com-github-jognrengelman-shadow" }
