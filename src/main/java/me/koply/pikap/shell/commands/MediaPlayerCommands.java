@@ -43,6 +43,7 @@ public class MediaPlayerCommands extends AudioEventAdapter {
 
     @Command(usages = {"play", "queue", "p"},
             options = { @Option(name = "youtube", shortName = "y", description = "The youtube link to play or queue.", required = true),
+                        @Option(name = "youtubemusic", shortName =  "ym", description = "The youtube music link to play or queue.", required = true),
                         @Option(name = "soundcloud", shortName = "sc", description = "The soundcloud link to play or queue.", required = true),
                         @Option(name = "file", shortName = "fil", description = "The file to play or queue.", required = true),
                         @Option(name = "first", shortName = "f", description = "Adds the first element of the search result to the queue."),
@@ -70,6 +71,14 @@ public class MediaPlayerCommands extends AudioEventAdapter {
                     query.append(s);
                 } else {
                     query.append("ytsearch:").append(s);
+                }
+            });
+
+            ArgsHelper.getAny(parsedArgs, "--youtubemusic", "-ym").ifPresent(s -> {
+                if (RegexHelper.isYoutubeURL(s)) {
+                    query.append(s);
+                } else {
+                    query.append("ytmsearch:").append(s);
                 }
             });
 
@@ -154,7 +163,6 @@ public class MediaPlayerCommands extends AudioEventAdapter {
         }, exception -> {
             log.error("Failed to search for {}", queryStr, exception);
             System.out.println(red("An error occur while searching."));
-            exception.printStackTrace();
             synchronized (lock) {
                 lock.notify();
             }

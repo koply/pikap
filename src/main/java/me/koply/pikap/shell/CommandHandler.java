@@ -81,7 +81,7 @@ public class CommandHandler {
         } catch (Exception ex) {
             log.error("An error occurred while handling commands.", ex);
         } finally {
-            mediaFacade.shutdown();
+            mediaFacade.shutdown(); // TODO: Change to the shutdown event observer
             terminal.close();
             System.exit(1);
         }

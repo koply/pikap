@@ -22,10 +22,16 @@ public class Configuration {
     private int maximumVolume;
 
     @ConfigProperty(description = "Database backend (sqlite)", defaultValue = "sqlite", type = String.class)
-    private String db;
+    private String databaseBackend;
 
     @ConfigProperty(description = "Default data.db", defaultValue = "data.db", type = String.class)
-    private String dbFile;
+    private String databaseFilePath;
+
+    @ConfigProperty(description = "Username for database", defaultValue = "pikap", type = String.class)
+    private String databaseUsername;
+
+    @ConfigProperty(description = "Password for database", defaultValue = "pikap123", type = String.class)
+    private String databasePassword;
 
     @ConfigProperty(description = "Record tracks", defaultValue = "false", type = Boolean.class)
     private boolean recorder;

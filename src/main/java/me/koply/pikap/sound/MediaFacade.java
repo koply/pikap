@@ -9,12 +9,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioReference;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.YoutubeSourceOptions;
 import dev.lavalink.youtube.clients.*;
-import me.koply.pikap.config.ConfigurationLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sound.sampled.LineUnavailableException;
 import java.util.Collection;
@@ -33,12 +32,16 @@ public class MediaFacade {
 
     private final LinkedBlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
 
-    @Inject
-    public MediaFacade(ConfigurationLoader configurationLoader) {
+    public MediaFacade() {
         audioPlayerManager = new PikapAudioPlayerManager();
-        //AudioSourceManagers.registerRemoteSources(audioPlayerManager);
 
-        audioPlayerManager.registerSourceManager(new YoutubeAudioSourceManager(true, new MWeb(), new MWebWithThumbnail(), new Web(), new WebWithThumbnail(), new Ios(), new IosWithThumbnail(), new WebEmbedded(), new Music()));
+        var options = new YoutubeSourceOptions()
+                .setRemoteCipher("https://cipher.kikkia.dev/", "", "me.koply.pikap | 1.0")
+                .setAllowSearch(true);
+
+        var youtubeAudioSourceManager = new YoutubeAudioSourceManager(options, new MWeb(), new MWebWithThumbnail(), new Web(), new WebWithThumbnail(), new Ios(), new IosWithThumbnail(), new Music());
+
+        audioPlayerManager.registerSourceManager(youtubeAudioSourceManager);
         audioPlayerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
 
         audioPlayerManager.getConfiguration().setOutputFormat(StandardAudioDataFormats.COMMON_PCM_S16_BE);

@@ -9,9 +9,6 @@ group = "me.koply"
 version = "1.0-SNAPSHOT"
 description = "Pikap"
 
-extra["springShellVersion"] = "3.4.0"
-
-
 application {
     mainClass = "me.koply.pikap.Main"
     applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
